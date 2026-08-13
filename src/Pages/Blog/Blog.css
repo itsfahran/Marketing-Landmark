@@ -1,0 +1,238 @@
+.blogPage {
+  width: 100%;
+  background: #ffffff;
+  color: #252381;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Hero */
+.blogHero {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 90px 6% 70px;
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.blogMiniTitle {
+  display: inline-block;
+  background: rgba(37, 35, 129, 0.09);
+  color: #252381;
+  padding: 9px 18px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.blogHeroContent h1 {
+  font-size: 56px;
+  line-height: 1.08;
+  font-weight: 900;
+  max-width: 760px;
+  margin-bottom: 22px;
+}
+
+.blogHeroContent p {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #555;
+  max-width: 650px;
+}
+
+.blogHeroCard {
+  background: linear-gradient(135deg, #252381, #4d4ae8);
+  color: #fff;
+  padding: 38px;
+  border-radius: 28px;
+  box-shadow: 0 25px 55px rgba(37, 35, 129, 0.25);
+}
+
+.blogHeroCard span {
+  color: #f5c400;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.blogHeroCard h3 {
+  font-size: 28px;
+  line-height: 1.3;
+  margin: 18px 0;
+}
+
+.blogHeroCard p {
+  color: #eeeeee;
+  line-height: 1.7;
+}
+
+/* Categories */
+.blogCategories {
+  max-width: 1180px;
+  margin: 0 auto 45px;
+  padding: 0 6%;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.blogCategories button {
+  border: 1px solid rgba(37, 35, 129, 0.18);
+  background: #fff;
+  color: #252381;
+  padding: 12px 22px;
+  border-radius: 30px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.blogCategories button:first-child,
+.blogCategories button:hover {
+  background: #252381;
+  color: #fff;
+}
+
+/* Blog Cards */
+.blogGrid {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 6% 80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.blogCard {
+  background: #ffffff;
+  border: 1px solid rgba(37, 35, 129, 0.12);
+  border-radius: 26px;
+  padding: 30px;
+  min-height: 310px;
+  transition: 0.35s ease;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(37, 35, 129, 0.06);
+}
+
+.blogCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 55px rgba(37, 35, 129, 0.16);
+}
+
+.blogIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: rgba(37, 35, 129, 0.09);
+  color: #252381;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  margin-bottom: 22px;
+}
+
+.blogCard span {
+  font-size: 13px;
+  font-weight: 900;
+  color: #252381;
+}
+
+.blogCard h3 {
+  font-size: 22px;
+  line-height: 1.35;
+  margin: 14px 0;
+}
+
+.blogCard p {
+  color: #666;
+  line-height: 1.7;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.blogCard a {
+  color: #252381;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+/* CTA */
+.blogNewsletter {
+  max-width: 1080px;
+  margin: 0 auto 90px;
+  padding: 55px 6%;
+  background: linear-gradient(135deg, #252381, #4d4ae8);
+  color: #fff;
+  text-align: center;
+  border-radius: 32px;
+}
+
+.blogNewsletter h2 {
+  font-size: 38px;
+  margin-bottom: 14px;
+}
+
+.blogNewsletter p {
+  max-width: 650px;
+  margin: 0 auto 28px;
+  color: #eeeeee;
+  line-height: 1.7;
+}
+
+.blogNewsletter a {
+  display: inline-block;
+  background: #fff;
+  color: #252381;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .blogHero,
+  .blogGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .blogHeroContent h1 {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 650px) {
+  .blogHero {
+    grid-template-columns: 1fr;
+    padding: 70px 5% 45px;
+  }
+
+  .blogHeroContent h1 {
+    font-size: 34px;
+  }
+
+  .blogHeroContent p {
+    font-size: 16px;
+  }
+
+  .blogGrid {
+    grid-template-columns: 1fr;
+    padding: 0 5% 60px;
+  }
+
+  .blogCategories {
+    padding: 0 5%;
+  }
+
+  .blogNewsletter {
+    margin: 0 5% 70px;
+    padding: 38px 24px;
+  }
+
+  .blogNewsletter h2 {
+    font-size: 28px;
+  }
+}

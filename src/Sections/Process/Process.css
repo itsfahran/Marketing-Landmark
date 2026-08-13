@@ -1,0 +1,359 @@
+.process-section {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 55px 5.6% 70px;
+  font-family: "Manrope", sans-serif;
+  overflow: hidden;
+}
+
+.process-heading {
+  text-align: center;
+  margin-bottom: 46px;
+}
+
+.process-badge {
+  width: fit-content;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.process-badge svg {
+  font-size: 14px;
+}
+
+.process-heading h2 {
+  font-size: 38px;
+  line-height: 1.15;
+  color: #000000;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.process-marquee {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 8px 0 18px;
+}
+
+.process-track {
+  width: max-content;
+  display: flex;
+  align-items: flex-start;
+  animation: processAutoSlide 70s linear infinite;
+}
+
+.process-marquee:hover .process-track {
+  animation-play-state: paused;
+}
+
+/* Mouse hover par marquee pause */
+.process-marquee:hover .process-track {
+  animation-play-state: paused;
+}
+
+.process-slide-group {
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+}
+
+.process-card {
+  width: 245px;
+  min-height: 215px;
+  text-align: center;
+  padding: 18px 9px;
+  border-radius: 22px;
+  background: #f0efef;
+  position: relative;
+  transition: all 0.35s ease;
+  margin: 0 7px;
+  animation: processCardFloat 4s ease-in-out infinite;
+}
+
+.process-number {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #999;
+  z-index: 3;
+}
+
+.process-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(37, 35, 129, 0.07), rgba(37, 35, 129, 0.02));
+  opacity: 0;
+  transform: scale(0.96);
+  transition: all 0.35s ease;
+  z-index: 0;
+}
+
+.process-card:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.process-card:hover {
+  transform: translateY(-8px);
+}
+
+.process-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background-color: #252381;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 14px 28px rgba(37, 35, 129, 0.24);
+  position: relative;
+  z-index: 1;
+  transition: all 0.35s ease;
+  animation: iconPlay 1.45s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.process-active .process-icon {
+  animation-play-state: running;
+}
+
+.process-card:hover .process-icon {
+  transform: translateY(-4px) rotate(8deg);
+  box-shadow: 0 18px 36px rgba(37, 35, 129, 0.34);
+}
+
+.process-card h3 {
+  font-size: 15px;
+  line-height: 1.25;
+  color: #000000;
+  font-weight: 600;
+  margin: 0 0 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.process-card p {
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #000000;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
+}
+
+.process-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  align-self: stretch;
+  min-height: 215px;
+
+  min-width: 42px;
+  margin: 0 10px;
+
+  color: #252381;
+  font-size: 32px;
+
+  flex-shrink: 0;
+}
+
+.process-arrow svg {
+  filter: drop-shadow(0 8px 12px rgba(37, 35, 129, 0.22));
+  animation: arrowMove 1.15s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.process-active .process-arrow svg {
+  animation-play-state: running;
+}
+
+@keyframes processAutoSlide {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes iconPlay {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 14px 28px rgba(37, 35, 129, 0.24);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.06);
+    box-shadow: 0 20px 38px rgba(37, 35, 129, 0.34);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 14px 28px rgba(37, 35, 129, 0.24);
+  }
+}
+
+@keyframes arrowMove {
+  0% {
+    transform: translateX(-8px);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateX(7px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-8px);
+    opacity: 0.45;
+  }
+}
+
+@keyframes processCardFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* 769px to 1023px */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .process-section {
+    padding: 50px 4.5% 60px;
+  }
+
+  .process-heading h2 {
+    font-size: 34px;
+  }
+
+  .process-track {
+    animation-duration: 24s;
+  }
+
+  .process-card {
+    width: 138px;
+  }
+
+  .process-arrow {
+    font-size: 30px;
+    min-width: 30px;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
+
+/* 768px and below */
+@media (max-width: 768px) {
+  .process-section {
+    padding: 48px 5% 55px;
+  }
+
+  .process-heading {
+    margin-bottom: 34px;
+  }
+
+  .process-heading h2 {
+    font-size: 32px;
+  }
+
+  .process-track {
+    animation-duration: 22s;
+  }
+
+  .process-card {
+    width: 145px;
+    min-height: 210px;
+    padding: 18px 10px;
+    border: 1px solid rgba(37, 35, 129, 0.18);
+    background: linear-gradient(180deg, #ffffff 0%, #f8f8ff 100%);
+    box-shadow: 0 14px 32px rgba(37, 35, 129, 0.08);
+  }
+
+  .process-arrow {
+    font-size: 28px;
+    min-width: 28px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .process-card h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .process-card p {
+    font-size: 13px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .process-section {
+    padding: 42px 4% 48px;
+  }
+
+  .process-heading h2 {
+    font-size: 27px;
+  }
+
+  .process-badge {
+    font-size: 15px;
+  }
+
+  .process-track {
+    animation-duration: 20s;
+  }
+
+  .process-card {
+    width: 138px;
+    padding: 18px 9px;
+    border-radius: 18px;
+  }
+
+  .process-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 18px;
+  }
+
+  .process-card h3 {
+    font-size: 14.5px;
+  }
+
+  .process-card p {
+    font-size: 12.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-track,
+  .process-icon,
+  .process-arrow svg {
+    animation: none;
+  }
+}
+.process-marquee {
+  touch-action: pan-y;
+}

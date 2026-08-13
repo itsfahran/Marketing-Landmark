@@ -1,0 +1,294 @@
+.geoProcessSection {
+  width: 100%;
+  padding: 50px 7%;
+  /* background:
+    radial-gradient(circle at 8% 18%, rgba(37, 35, 129, 0.12), transparent 28%),
+    radial-gradient(circle at 92% 80%, rgba(37, 35, 129, 0.10), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f7f7ff 100%); */
+    background-color: #ffffff;
+  overflow: hidden;
+  position: relative;
+}
+
+.geoProcessHeader {
+  text-align: center;
+  max-width: 950px;
+  margin: 0 auto 55px;
+}
+
+.geoProcessHeader span {
+  color: #252381;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.geoProcessHeader h2 {
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.15;
+  font-weight: 900;
+  color: #111;
+  margin-top: 14px;
+}
+
+.geoProcessIntro {
+  max-width: 880px;
+  margin: 22px auto 0;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #555;
+  font-weight: 500;
+}
+
+.geoProcessSlider {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.geoProcessSlider::before,
+.geoProcessSlider::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 110px;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.geoProcessSlider::before {
+  left: 0;
+  background: linear-gradient(to right, #f7f7ff, transparent);
+}
+
+.geoProcessSlider::after {
+  right: 0;
+  background: linear-gradient(to left, #f7f7ff, transparent);
+}
+
+.geoProcessTrack {
+  display: flex;
+  width: max-content;
+  animation: geoProcessSlide 75s linear infinite;
+}
+
+.geoProcessSlider:hover .geoProcessTrack {
+  animation-play-state: paused;
+}
+
+.geoProcessGroup {
+  display: flex;
+  gap: 34px;
+  padding-right: 34px;
+  flex-shrink: 0;
+}
+
+.geoProcessStep {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+.geoProcessCard {
+  width: 285px;
+  min-height: 245px;
+  padding: 34px 22px 28px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(37, 35, 129, 0.13);
+  text-align: center;
+  box-shadow: 0 20px 55px rgba(37, 35, 129, 0.10);
+  position: relative;
+  overflow: hidden;
+  animation: geoCardFloat 4s ease-in-out infinite;
+  transition: 0.45s ease;
+}
+
+.geoProcessCard::before {
+  content: "";
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  right: -85px;
+  top: -85px;
+  background: rgba(37, 35, 129, 0.08);
+  border-radius: 50%;
+  transition: 0.45s ease;
+}
+
+.geoProcessCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(37, 35, 129, 0.08));
+  opacity: 0;
+  transition: 0.45s ease;
+}
+
+.geoProcessCard:hover {
+  transform: translateY(-14px);
+  border-color: rgba(37, 35, 129, 0.35);
+  box-shadow: 0 35px 80px rgba(37, 35, 129, 0.18);
+}
+
+.geoProcessCard:hover::before {
+  transform: scale(1.5);
+  background: rgba(37, 35, 129, 0.14);
+}
+
+.geoProcessCard:hover::after {
+  opacity: 1;
+}
+
+.geoProcessNumber {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #999;
+  z-index: 3;
+}
+
+.geoProcessIcon {
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 20px;
+  border-radius: 22px;
+  background: #252381;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 18px 38px rgba(37, 35, 129, 0.32);
+  animation: geoIconPulse 2.2s ease-in-out infinite;
+  transition: 0.4s ease;
+}
+
+.geoProcessIcon svg {
+  animation: geoIconMove 3s ease-in-out infinite;
+}
+
+.geoProcessCard:hover .geoProcessIcon {
+  border-radius: 50%;
+  transform: scale(1.12) rotate(-7deg);
+}
+
+.geoProcessCard h3 {
+  position: relative;
+  z-index: 2;
+  font-size: 18px;
+  font-weight: 900;
+  color: #222;
+  margin-bottom: 13px;
+}
+
+.geoProcessCard p {
+  position: relative;
+  z-index: 2;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #555;
+  max-width: 260px;
+  margin: auto;
+}
+
+.geoProcessStep:nth-child(1) .geoProcessCard { animation-delay: 0s; }
+.geoProcessStep:nth-child(2) .geoProcessCard { animation-delay: 0.25s; }
+.geoProcessStep:nth-child(3) .geoProcessCard { animation-delay: 0.5s; }
+.geoProcessStep:nth-child(4) .geoProcessCard { animation-delay: 0.75s; }
+.geoProcessStep:nth-child(5) .geoProcessCard { animation-delay: 1s; }
+.geoProcessStep:nth-child(6) .geoProcessCard { animation-delay: 1.25s; }
+.geoProcessStep:nth-child(7) .geoProcessCard { animation-delay: 1.5s; }
+.geoProcessStep:nth-child(8) .geoProcessCard { animation-delay: 1.75s; }
+
+@keyframes geoProcessSlide {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes geoCardFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+@keyframes geoIconPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 35, 129, 0.35);
+  }
+
+  50% {
+    box-shadow: 0 0 0 16px rgba(37, 35, 129, 0);
+  }
+}
+
+@keyframes geoIconMove {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(13deg) scale(1.12);
+  }
+}
+
+@media (max-width: 768px) {
+  .geoProcessSection {
+    padding: 60px 5%;
+  }
+
+  .geoProcessHeader {
+    margin-bottom: 38px;
+  }
+
+  .geoProcessHeader h2 {
+    font-size: 30px;
+  }
+
+  .geoProcessHeader h2 br {
+    display: none;
+  }
+
+  .geoProcessIntro {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .geoProcessGroup {
+    gap: 22px;
+    padding-right: 22px;
+  }
+
+  .geoProcessCard {
+    width: 270px;
+    min-height: 240px;
+    padding: 32px 20px;
+  }
+
+  .geoProcessSlider::before,
+  .geoProcessSlider::after {
+    width: 45px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .geoProcessSection {
+    padding: 70px 5%;
+  }
+
+  .geoProcessCard {
+    width: 280px;
+  }
+}

@@ -1,0 +1,819 @@
+.geoHero {
+  width: 100%;
+  min-height: 88vh;
+  padding: 0px 7%;
+  /* background:
+    linear-gradient(120deg, rgba(37, 35, 129, 0.06) 0%, transparent 35%),
+    radial-gradient(circle at 12% 25%, rgba(37, 35, 129, 0.16), transparent 26%),
+    radial-gradient(circle at 88% 78%, rgba(37, 35, 129, 0.12), transparent 30%),
+    #ffffff; */
+    background-color: #ffffff;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 50px;
+}
+
+.geoHero::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  right: -80px;
+  top: 120px;
+  background: rgba(37, 35, 129, 0.08);
+  border-radius: 50%;
+  filter: blur(8px);
+  animation: floatShape 7s ease-in-out infinite;
+}
+
+.geoWrapper {
+  max-width: 1180px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  align-items: center;
+  gap: 70px;
+  position: relative;
+  z-index: 2;
+}
+
+.geoVisual {
+  position: relative;
+  min-height: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeLeft 0.9s ease both;
+}
+
+.geoOrbit {
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  border: 1.5px dashed rgba(37, 35, 129, 0.24);
+  border-radius: 50%;
+  animation: geoRotate 24s linear infinite;
+}
+
+.geoOrbit::before,
+.geoOrbit::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: #252381;
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(37, 35, 129, 0.45);
+}
+
+.geoOrbit::before {
+  top: 44px;
+  left: 78px;
+}
+
+.geoOrbit::after {
+  bottom: 65px;
+  right: 62px;
+}
+
+.geoImageCard {
+  position: relative;
+  width: 370px;
+  height: 480px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.14), transparent 35%),
+    linear-gradient(145deg, #252381 0%, #17155f 58%, #0f0e3d 100%);
+  border-radius: 34px;
+  overflow: hidden;
+  box-shadow:
+    0 35px 80px rgba(37, 35, 129, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transition: 0.45s ease;
+}
+
+.geoImageCard:hover {
+  transform: translateY(-10px) scale(1.015);
+  box-shadow:
+    0 45px 90px rgba(37, 35, 129, 0.34),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+}
+
+.geoImageCard::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 25px;
+  z-index: 2;
+}
+
+.geoImageCard::after {
+  content: "";
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  left: -70px;
+  bottom: -55px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.geoImageCard img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 3;
+  transition: 0.45s ease;
+}
+
+.geoImageCard:hover img {
+  transform: translateX(-50%) scale(1.04);
+}
+
+.geoMiniCard {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(37, 35, 129, 0.13);
+  border-radius: 18px;
+  padding: 16px 22px;
+  box-shadow: 0 18px 45px rgba(20, 19, 82, 0.15);
+  transition: 0.35s ease;
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+.geoMiniCard:hover {
+  transform: translateY(-8px);
+  background: #ffffff;
+  box-shadow: 0 25px 55px rgba(37, 35, 129, 0.22);
+}
+
+.geoMiniCard strong {
+  display: block;
+  font-size: 30px;
+  color: #252381;
+  line-height: 1;
+}
+
+.geoMiniCard span {
+  font-size: 13px;
+  color: #333;
+  font-weight: 700;
+}
+
+.cardOne {
+  right: 0;
+  top: 118px;
+}
+
+.cardTwo {
+  left: 0;
+  bottom: 120px;
+  animation-delay: 1s;
+}
+
+.geoText {
+  position: relative;
+  animation: fadeRight 0.9s ease both;
+}
+
+.geoLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 17px;
+  border-radius: 100px;
+  background: rgba(37, 35, 129, 0.09);
+  color: #252381;
+  border: 1px solid rgba(37, 35, 129, 0.18);
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 22px;
+  transition: 0.35s ease;
+}
+
+.geoLabel:hover {
+  background: #252381;
+  color: #ffffff;
+  transform: translateY(-3px);
+}
+
+.geoText h1 {
+  max-width: 620px;
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.12;
+  font-weight: 900;
+  color: #111111;
+  letter-spacing: -1.2px;
+  margin-bottom: 22px;
+}
+
+.geoText h1 span {
+  display: block;
+  color: #252381;
+  position: relative;
+}
+
+.geoText h1 span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 130px;
+  height: 5px;
+  background: #252381;
+  border-radius: 20px;
+}
+
+.geoText p {
+  max-width: 600px;
+  font-size: 16.5px;
+  line-height: 1.85;
+  color: #4b4b4b;
+  margin-bottom: 28px;
+}
+
+.geoFeatures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.geoFeatures div {
+  position: relative;
+  padding: 17px 15px 17px 18px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(37, 35, 129, 0.09);
+  border-radius: 16px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #222;
+  box-shadow: 0 12px 32px rgba(37, 35, 129, 0.08);
+  overflow: hidden;
+  transition: 0.35s ease;
+}
+
+.geoFeatures div::before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 55%;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #252381;
+  border-radius: 20px;
+}
+
+.geoFeatures div:hover {
+  transform: translateY(-7px);
+  border-color: rgba(37, 35, 129, 0.22);
+  box-shadow: 0 22px 45px rgba(37, 35, 129, 0.14);
+}
+
+.geoActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.geoActions button {
+  border: none;
+  padding: 15px 30px;
+  border-radius: 100px;
+  background: #252381;
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 16px 35px rgba(37, 35, 129, 0.28);
+  transition: 0.35s ease;
+}
+
+.geoActions button:hover {
+  transform: translateY(-5px);
+  background: #17155f;
+  box-shadow: 0 22px 45px rgba(37, 35, 129, 0.36);
+}
+
+.geoActions a {
+  color: #252381;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.geoActions a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #252381;
+  left: 0;
+  bottom: 0;
+  transform: scaleX(0.45);
+  transform-origin: left;
+  transition: 0.35s ease;
+}
+
+.geoActions a:hover::after {
+  transform: scaleX(1);
+}
+
+@keyframes geoRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatCard {
+  0%, 100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: -14px;
+  }
+}
+
+@keyframes floatShape {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(25px);
+  }
+}
+
+@keyframes fadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.geoModernInfo {
+  width: 100%;
+  padding: 0px 7%;
+  /* background:
+    radial-gradient(circle at top left, rgba(37, 35, 129, 0.13), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f6f7ff 100%); */
+    background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 50px;
+}
+
+.geoModernInfo::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -160px;
+  top: -170px;
+  background: rgba(37, 35, 129, 0.09);
+  border-radius: 50%;
+}
+
+.geoModernWrap {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  align-items: center;
+  gap: 70px;
+  position: relative;
+  z-index: 2;
+}
+
+.geoModernText {
+  animation: geoFadeUp 0.8s ease both;
+}
+
+.geoModernTag {
+  display: inline-flex;
+  padding: 10px 18px;
+  border-radius: 100px;
+  background: rgba(37, 35, 129, 0.09);
+  color: #252381;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 22px;
+  border: 1px solid rgba(37, 35, 129, 0.18);
+}
+
+.geoModernText h2 {
+  max-width: 620px;
+  font-size: clamp(32px, 4vw, 4px);
+  line-height: 1.13;
+  color: #101010;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 22px;
+}
+
+.geoModernText h2 span {
+  display: block;
+  color: #252381;
+}
+
+.geoModernText p {
+  max-width: 620px;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.geoModernPoints {
+  display: grid;
+  gap: 14px;
+}
+
+.geoModernPoints div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(37, 35, 129, 0.1);
+  border-radius: 18px;
+  box-shadow: 0 14px 35px rgba(37, 35, 129, 0.08);
+  transition: 0.35s ease;
+}
+
+.geoModernPoints div:hover {
+  transform: translateX(8px);
+  border-color: rgba(37, 35, 129, 0.25);
+  box-shadow: 0 22px 45px rgba(37, 35, 129, 0.14);
+}
+
+.geoModernPoints strong {
+  min-width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: #252381;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.geoModernPoints span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+}
+
+.geoModernMedia {
+  position: relative;
+  animation: geoFadeRight 0.9s ease both;
+}
+
+.geoVideoCard {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 14px;
+  border-radius: 30px;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #252381, rgba(37, 35, 129, 0.25)) border-box;
+  border: 2px solid transparent;
+  box-shadow: 0 30px 70px rgba(37, 35, 129, 0.22);
+  overflow: hidden;
+  transition: 0.4s ease;
+}
+
+.geoVideoCard:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 40px 85px rgba(37, 35, 129, 0.3);
+}
+
+.geoVideoCard iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 20px;
+}
+
+.geoFloatingBadge {
+  position: absolute;
+  left: -35px;
+  bottom: -28px;
+  padding: 18px 24px;
+  border-radius: 22px;
+  background: #252381;
+  color: white;
+  box-shadow: 0 22px 45px rgba(37, 35, 129, 0.3);
+  animation: geoFloat 4s ease-in-out infinite;
+}
+
+.geoFloatingBadge strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.geoFloatingBadge span {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+@keyframes geoFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes geoFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes geoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* 768px tak - Mobile */
+@media (max-width: 768px) {
+  .geoHero {
+    min-height: auto;
+    padding: 0px 5% 55px;
+    padding-bottom: 20px
+  }
+
+  .geoWrapper {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .geoVisual {
+    min-height: 430px;
+    order: 1;
+  }
+
+  .geoText {
+    order: 2;
+    text-align: center;
+  }
+
+  .geoOrbit {
+    width: 315px;
+    height: 315px;
+  }
+
+  .geoImageCard {
+    width: 285px;
+    height: 385px;
+    border-radius: 28px;
+  }
+
+  .geoMiniCard {
+    padding: 12px 15px;
+    border-radius: 15px;
+  }
+
+  .geoMiniCard strong {
+    font-size: 24px;
+  }
+
+  .geoMiniCard span {
+    font-size: 11.5px;
+  }
+
+  .cardOne {
+    right: -2px;
+    top: 58px;
+  }
+
+  .cardTwo {
+    left: -2px;
+    bottom: 65px;
+  }
+
+  .geoLabel {
+    font-size: 12px;
+    padding: 9px 14px;
+    margin-bottom: 18px;
+  }
+
+  .geoText h1 {
+    max-width: 100%;
+    font-size: 32px;
+    line-height: 1.18;
+    letter-spacing: -0.7px;
+  }
+
+  .geoText h1 span::after {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 105px;
+    height: 4px;
+  }
+
+  .geoText p {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .geoFeatures {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .geoFeatures div {
+    font-size: 13px;
+    padding: 15px 15px 15px 18px;
+  }
+
+  .geoActions {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .geoActions button {
+    width: 100%;
+    padding: 14px 25px;
+  }
+    .geoModernInfo {
+    padding: 60px 5%;
+  }
+
+  .geoModernWrap {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .geoModernText {
+    text-align: center;
+  }
+
+  .geoModernText h2 {
+    font-size: 31px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .geoModernText p {
+    font-size: 15.5px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .geoModernPoints div {
+    text-align: left;
+  }
+
+  .geoFloatingBadge {
+    left: 18px;
+    bottom: -24px;
+    padding: 14px 18px;
+  }
+}
+
+
+/* 769px se 1023px tak - Tablet */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .geoHero {
+    min-height: auto;
+    padding: 55px 6% 65px;
+  }
+
+  .geoWrapper {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    max-width: 850px;
+  }
+
+  .geoVisual {
+    min-height: 500px;
+    order: 1;
+  }
+
+  .geoText {
+    order: 2;
+    text-align: center;
+  }
+
+  .geoOrbit {
+    width: 390px;
+    height: 390px;
+  }
+
+  .geoImageCard {
+    width: 340px;
+    height: 450px;
+  }
+
+  .cardOne {
+    right: 120px;
+    top: 95px;
+  }
+
+  .cardTwo {
+    left: 120px;
+    bottom: 95px;
+  }
+
+  .geoText h1 {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 42px;
+  }
+
+  .geoText h1 span::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .geoText p {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .geoFeatures {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .geoActions {
+    justify-content: center;
+  }
+   .geoModernInfo {
+    padding: 70px 6%;
+  }
+
+  .geoModernWrap {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    max-width: 850px;
+  }
+
+  .geoModernText {
+    text-align: center;
+  }
+
+  .geoModernText h2,
+  .geoModernText p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .geoModernPoints {
+    max-width: 680px;
+    margin: auto;
+  }
+}

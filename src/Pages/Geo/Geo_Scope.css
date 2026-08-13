@@ -1,0 +1,272 @@
+.geoScopeSection {
+  width: 100%;
+  padding: 0px 7%;
+  background: #ffffff;
+  overflow: hidden;
+  padding-bottom: 50px;
+}
+
+.geoScopeHeader {
+  text-align: center;
+  margin-bottom: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.geoScopeHeader span {
+  display: inline-block;
+  color: #252381;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.geoScopeHeader h2 {
+  font-size: 36px;
+  line-height: 1.2;
+  color: #111;
+  font-weight: 900;
+}
+
+.geoScopeHeader .geo-scope-text {
+  width: 80%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #ffffff;
+  padding: 50px;
+  border-radius: 50px;
+  margin: 20px 0px;
+  border: 1px solid #e9e6e6;
+}
+
+.geoScopeHeader .geo-scope-text p {
+  text-align: justify;
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.geoScopeCards {
+  max-width: 1200px;
+  height: 520px;
+  margin: auto;
+  display: flex;
+  gap: 16px;
+}
+
+.geoScopeCard {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid #252381;
+  transition: flex 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 18px 45px rgba(37, 35, 129, 0.18);
+}
+
+.geoScopeCard:hover {
+  flex: 2.4;
+}
+
+.geoScopeImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(0.45);
+  transition: 0.55s ease;
+}
+
+.geoScopeCard:hover .geoScopeImg {
+  filter: grayscale(0%) brightness(0.55);
+  transform: scale(1.08);
+}
+
+.geoScopeOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(37, 35, 129, 0.92), rgba(37, 35, 129, 0.65)),
+    linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  transition: 0.45s ease;
+}
+
+.geoScopeCard:hover .geoScopeOverlay {
+  background:
+    linear-gradient(90deg, rgba(37, 35, 129, 0.9), rgba(37, 35, 129, 0.32)),
+    linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.geoScopeContent {
+  position: absolute;
+  inset: 0;
+  padding: 34px 28px;
+  z-index: 2;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.geoScopeNumber {
+  position: absolute;
+  top: 30px;
+  left: 28px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.geoScopeContent h3 {
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  transition: 0.4s ease;
+}
+
+.geoScopeContent p {
+  max-width: 480px;
+  font-size: 15.5px;
+  line-height: 1.75;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  opacity: 0;
+  transform: translateY(22px);
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.45s ease;
+}
+
+.geoScopeCard:hover .geoScopeContent p {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 260px;
+}
+
+.geoScopeCard:not(:hover) .geoScopeContent h3 {
+  writing-mode: horizontal-tb;
+  transform: none;
+  font-size: 28px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.geoScopeCard:not(:hover) .geoScopeContent {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* First preview effect when user reaches this section */
+.geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent {
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent h3 {
+  font-size: 28px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent p {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 260px;
+  width: 100%;
+}
+/* First preview when user scrolls to this section */
+.geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent {
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent h3 {
+  font-size: 28px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent p {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 260px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .geoScopeSection {
+    padding: 55px 5%;
+  }
+
+  .geoScopeHeader h2 {
+    font-size: 30px;
+  }
+
+  .geoScopeHeader .geo-scope-text {
+    width: 100%;
+    padding: 28px;
+    border-radius: 28px;
+  }
+
+  .geoScopeCards {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .geoScopeCard,
+  .geoScopeCard:hover {
+    flex: unset;
+    height: 360px;
+  }
+
+  .geoScopeCard:not(:hover) .geoScopeContent h3 {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .geoScopeContent p {
+    opacity: 0;
+    max-height: 260px;
+    transform: none;
+    font-size: 14px;
+  }
+
+  .geoScopeSection.preview-active .geoScopeCard:not(:hover) .geoScopeContent p {
+    opacity: 1;
+    max-height: 220px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .geoScopeSection {
+    padding: 60px 5%;
+  }
+
+  .geoScopeCards {
+    height: 480px;
+  }
+
+  .geoScopeCard:hover {
+    flex: 2.1;
+  }
+
+  .geoScopeContent {
+    padding: 28px 22px;
+  }
+
+  .geoScopeContent h3 {
+    font-size: 26px;
+  }
+
+  .geoScopeContent p {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,423 @@
+.geoPricingSection {
+  width: 100%;
+  padding: 0px 7%;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(37, 35, 129, 0.12), transparent 28%),
+    radial-gradient(circle at 90% 80%, rgba(37, 35, 129, 0.10), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f7f7ff 100%);
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 50px;
+}
+
+.geoPricingHeader {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 45px;
+}
+
+.geoPricingHeader span {
+  color: #252381;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.geoPricingHeader h2 {
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 900;
+  color: #111;
+  margin: 12px 0;
+}
+
+.geoPricingHeader p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.geoPricingGrid {
+  max-width: 1220px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.geoPricingCard {
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(37, 35, 129, 0.14);
+  border-radius: 30px;
+  padding: 28px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 18px 50px rgba(37, 35, 129, 0.1);
+  transition: 0.45s ease;
+}
+
+.geoPricingCard::before {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  right: -95px;
+  top: -95px;
+  background: rgba(37, 35, 129, 0.08);
+  border-radius: 50%;
+  z-index: -1;
+  transition: 0.45s ease;
+}
+
+.geoPricingCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(37, 35, 129, 0.07) 50%,
+    rgba(37, 35, 129, 0.16) 100%
+  );
+  opacity: 0;
+  z-index: -1;
+  transition: 0.45s ease;
+}
+
+.geoPricingCard:hover {
+  transform: translateY(-14px);
+  border-color: rgba(37, 35, 129, 0.38);
+  box-shadow: 0 34px 75px rgba(37, 35, 129, 0.2);
+}
+
+.geoPricingCard:hover::before {
+  transform: scale(1.35);
+  background: rgba(37, 35, 129, 0.14);
+}
+
+.geoPricingCard:hover::after {
+  opacity: 1;
+}
+
+.geoPricingPopular {
+  background: #252381;
+  color: #fff;
+  transform: translateY(-18px);
+  border-color: #252381;
+  box-shadow: 0 28px 75px rgba(37, 35, 129, 0.28);
+}
+
+.geoPricingPopular::before {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.geoPricingPopular::after {
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.18) 100%
+  );
+}
+
+.geoPricingPopular:hover {
+  transform: translateY(-30px);
+}
+
+.geoPricingBadge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  padding: 8px 14px;
+  border-radius: 100px;
+  background: #fff;
+  color: #252381;
+  font-size: 12px;
+  font-weight: 900;
+  z-index: 3;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.geoPricingTop {
+  position: relative;
+  z-index: 2;
+}
+
+.geoPricingTop span {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 100px;
+  background: rgba(37, 35, 129, 0.08);
+  color: #252381;
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 18px;
+  transition: 0.35s ease;
+}
+
+.geoPricingPopular .geoPricingTop span {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.geoPricingCard:hover .geoPricingTop span {
+  background: #252381;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.geoPricingPopular:hover .geoPricingTop span {
+  background: #fff;
+  color: #252381;
+}
+
+.geoPricingTop h3 {
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  transition: 0.35s ease;
+}
+
+.geoPricingCard:hover .geoPricingTop h3 {
+  color: #252381;
+  transform: translateY(-4px);
+}
+
+.geoPricingPopular:hover .geoPricingTop h3 {
+  color: #fff;
+}
+
+.geoPricingTop p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+  min-height: 48px;
+}
+
+.geoPricingPopular .geoPricingTop p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.geoPricingPriceBox {
+  position: relative;
+  z-index: 2;
+  margin: 28px 0 24px;
+  padding: 22px;
+  border-radius: 24px;
+  background: #252381;
+  color: #fff;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  box-shadow: 0 18px 38px rgba(37, 35, 129, 0.25);
+  transition: 0.4s ease;
+}
+
+.geoPricingCard:hover .geoPricingPriceBox {
+  transform: scale(1.04);
+  box-shadow: 0 25px 55px rgba(37, 35, 129, 0.36);
+}
+
+.geoPricingPopular .geoPricingPriceBox {
+  background: #fff;
+  color: #252381;
+}
+
+.geoPricingPriceBox small {
+  font-size: 15px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.geoPricingPriceBox strong {
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.geoPricingPriceBox span {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.geoPricingPages {
+  position: relative;
+  z-index: 2;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(37, 35, 129, 0.07);
+  color: #252381;
+  font-size: 15px;
+  font-weight: 900;
+  margin-bottom: 22px;
+  transition: 0.35s ease;
+}
+
+.geoPricingCard:hover .geoPricingPages {
+  transform: translateY(-3px);
+  letter-spacing: 0.2px;
+}
+
+.geoPricingPopular .geoPricingPages {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.geoPricingList {
+  position: relative;
+  z-index: 2;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: grid;
+  gap: 8px;
+}
+
+.geoPricingList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: #444;
+  padding: 7px 8px;
+  border-radius: 12px;
+  transition: 0.3s ease;
+}
+
+.geoPricingList li:hover {
+  background: rgba(37, 35, 129, 0.08);
+  transform: translateX(7px);
+}
+
+.geoPricingPopular .geoPricingList li {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.geoPricingPopular .geoPricingList li:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.geoPricingList i {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 900;
+  transition: 0.35s ease;
+}
+
+.geoPricingList li:hover i {
+  transform: rotate(360deg) scale(1.12);
+}
+
+.geoPricingActive i {
+  background: rgba(37, 35, 129, 0.12);
+  color: #252381;
+}
+
+.geoPricingPopular .geoPricingActive i {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.geoPricingDisabled {
+  opacity: 0.45;
+}
+
+.geoPricingDisabled i {
+  background: #111;
+  color: #fff;
+}
+
+.geoPricingBtn {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 15px 24px;
+  border: none;
+  border-radius: 100px;
+  background: #252381;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.35s ease;
+}
+
+.geoPricingBtn::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #17155f;
+  z-index: -1;
+  transition: 0.45s ease;
+}
+
+.geoPricingBtn:hover::before {
+  width: 100%;
+}
+
+.geoPricingBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 35px rgba(37, 35, 129, 0.28);
+}
+
+.geoPricingPopular .geoPricingBtn {
+  background: #fff;
+  color: #252381;
+}
+
+.geoPricingPopular .geoPricingBtn::before {
+  background: #e9e9ff;
+}
+
+@media (max-width: 768px) {
+  .geoPricingSection {
+    padding: 0px 5%;
+    padding-bottom: 30px;
+  }
+
+  .geoPricingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .geoPricingPopular {
+    transform: none;
+  }
+
+  .geoPricingPopular:hover {
+    transform: translateY(-12px);
+  }
+
+  .geoPricingPriceBox strong {
+    font-size: 34px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .geoPricingSection {
+    padding: 0px 5%;
+    padding-bottom: 40px;
+  }
+
+  .geoPricingGrid {
+    grid-template-columns: 1fr;
+    max-width: 620px;
+  }
+
+  .geoPricingPopular {
+    transform: none;
+  }
+
+  .geoPricingPopular:hover {
+    transform: translateY(-12px);
+  }
+}

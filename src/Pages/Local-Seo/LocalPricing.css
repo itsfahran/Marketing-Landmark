@@ -1,0 +1,271 @@
+.localPricingSection {
+  width: 100%;
+  padding: 100px 8%;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(37, 35, 129, 0.08), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8ff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.localPricingContainer {
+  max-width: 1250px;
+  margin: auto;
+}
+
+.localPricingHeader {
+  max-width: 760px;
+  margin: 0 auto 60px;
+  text-align: center;
+}
+
+.localPricingHeader span {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 50px;
+  background: #ffffff;
+  color: #252381;
+  font-weight: 800;
+  border: 1px solid rgba(37, 35, 129, 0.12);
+  box-shadow: 0 12px 30px rgba(37, 35, 129, 0.08);
+  margin-bottom: 18px;
+}
+
+.localPricingHeader h2 {
+  font-size: 46px;
+  line-height: 1.15;
+  color: #101124;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.localPricingHeader p {
+  color: #5d6075;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.localPricingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.localPricingCard {
+  position: relative;
+  padding: 34px 28px;
+  border-radius: 34px;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, rgba(37, 35, 129, 0.25), rgba(89, 86, 255, 0.06)) border-box;
+  border: 1.5px solid transparent;
+  box-shadow: 0 24px 70px rgba(37, 35, 129, 0.1);
+  overflow: hidden;
+  transition: 0.35s ease;
+}
+
+.localPricingCard::before {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  background: radial-gradient(circle, rgba(37, 35, 129, 0.1), transparent 68%);
+  top: -95px;
+  right: -95px;
+  border-radius: 50%;
+}
+
+.localPricingCard:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 36px 95px rgba(37, 35, 129, 0.18);
+}
+
+.popularPlan {
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #252381, rgba(89, 86, 255, 0.3)) border-box;
+  transform: translateY(-18px);
+}
+
+.popularPlan:hover {
+  transform: translateY(-28px);
+}
+
+.popularBadge {
+  position: absolute;
+  top: 22px;
+  right: -42px;
+  background: #252381;
+  color: #ffffff;
+  padding: 9px 50px;
+  font-size: 13px;
+  font-weight: 800;
+  transform: rotate(35deg);
+}
+
+.pricingTop {
+  position: relative;
+  z-index: 2;
+}
+
+.pricingTop span {
+  display: inline-block;
+  background: #f4f5ff;
+  color: #252381;
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.pricingTop h3 {
+  font-size: 30px;
+  color: #101124;
+  margin-bottom: 8px;
+}
+
+.pricingTop p {
+  color: #656879;
+  font-size: 15px;
+}
+
+.pricingPrice {
+  margin: 28px 0;
+  padding: 24px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #252381, #403dcc);
+  color: #ffffff;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 18px 40px rgba(37, 35, 129, 0.25);
+}
+
+.pricingPrice small {
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.pricingPrice h4 {
+  font-size: 42px;
+  line-height: 1;
+}
+
+.pricingPrice span {
+  margin-bottom: 7px;
+  font-size: 14px;
+}
+
+.pricingFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+.pricingFeatures li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  color: #3f4254;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.pricingFeatures li span {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f0f1ff;
+  color: #252381;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pricingBtn {
+  width: 100%;
+  margin-top: 30px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 15px;
+  border-radius: 50px;
+  background: #252381;
+  color: #ffffff;
+  font-weight: 800;
+  transition: 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.pricingBtn:hover {
+  background: #1b195f;
+  transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+  .localPricingSection {
+    padding: 70px 5%;
+  }
+
+  .localPricingHeader h2 {
+    font-size: 34px;
+  }
+
+  .localPricingHeader p {
+    font-size: 16px;
+  }
+
+  .localPricingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .popularPlan {
+    transform: none;
+  }
+
+  .popularPlan:hover {
+    transform: translateY(-12px);
+  }
+
+  .pricingPrice h4 {
+    font-size: 36px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .localPricingSection {
+    padding: 80px 6%;
+  }
+
+  .localPricingGrid {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    margin: auto;
+  }
+
+  .popularPlan {
+    transform: none;
+  }
+
+  .localPricingHeader h2 {
+    font-size: 42px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .localPricingGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

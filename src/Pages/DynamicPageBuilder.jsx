@@ -62,7 +62,10 @@ const DynamicPageBuilder = () => {
             } else if (comp.id === 'pricing') {
               const { data: packages } = await supabase
                 .from('component_pricing_packages')
-                .select('*')
+                .select(`
+                  *,
+                  features:component_pricing_features(*)
+                `)
                 .eq('pricing_id', compData.id)
                 .order('sort_order', { ascending: true });
               compData.pricing = packages || [];
@@ -73,6 +76,27 @@ const DynamicPageBuilder = () => {
                 .eq('process_id', compData.id)
                 .order('sort_order', { ascending: true });
               compData.processSteps = steps || [];
+            } else if (comp.id === 'cms') {
+              const { data: cmsItems } = await supabase
+                .from('component_cms_items')
+                .select('*')
+                .eq('cms_id', compData.id)
+                .order('sort_order', { ascending: true });
+              compData.items = cmsItems || [];
+            } else if (comp.id === 'hire') {
+              const { data: hireItems } = await supabase
+                .from('component_hire_items')
+                .select('*')
+                .eq('hire_id', compData.id)
+                .order('sort_order', { ascending: true });
+              compData.items = hireItems || [];
+            } else if (comp.id === 'casestudies') {
+              const { data: caseItems } = await supabase
+                .from('component_casestudies_items')
+                .select('*')
+                .eq('casestudies_id', compData.id)
+                .order('sort_order', { ascending: true });
+              compData.items = caseItems || [];
             }
 
             dataMap[`${comp.id}-${comp.template}`] = compData;

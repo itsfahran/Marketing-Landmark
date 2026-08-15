@@ -40,6 +40,7 @@ const PricingManager = ({ pricingData, pageId, template, onClose }) => {
   const handleAddPackage = () => {
     const newPackage = {
       id: `temp_${Date.now()}`,
+      tag: '',
       name: '',
       subtitle: '',
       price: '',
@@ -67,6 +68,7 @@ const PricingManager = ({ pricingData, pageId, template, onClose }) => {
           .from('component_pricing_packages')
           .insert({
             pricing_id: pricingId,
+            tag: pkg.tag,
             name: pkg.name,
             subtitle: pkg.subtitle,
             price: pkg.price,
@@ -94,6 +96,7 @@ const PricingManager = ({ pricingData, pageId, template, onClose }) => {
         await supabase
           .from('component_pricing_packages')
           .update({
+            tag: pkg.tag,
             name: pkg.name,
             subtitle: pkg.subtitle,
             price: pkg.price,
@@ -294,10 +297,22 @@ const PricingManager = ({ pricingData, pageId, template, onClose }) => {
           </>
         )}
 
-        {editingPackage && !editingPackage.isNew && (
+        {editingPackage && (
           <div className="edit-modal-overlay">
             <div className="edit-modal">
-              <h4>Edit Package</h4>
+              <h4>{editingPackage.isNew ? 'Add New Package' : 'Edit Package'}</h4>
+
+              <div className="form-group">
+                <label>Tag (e.g., Starter, Growth, Elite)</label>
+                <input
+                  type="text"
+                  value={editingPackage.tag || ''}
+                  onChange={(e) =>
+                    setEditingPackage({ ...editingPackage, tag: e.target.value })
+                  }
+                  placeholder="e.g., Starter, Growth, Elite"
+                />
+              </div>
 
               <div className="form-group">
                 <label>Package Name *</label>
@@ -387,6 +402,60 @@ const PricingManager = ({ pricingData, pageId, template, onClose }) => {
                   {' '}Mark as Popular/Featured
                 </label>
               </div>
+
+              {editingPackage.isNew && (
+                <div className="features-in-modal">
+                  <h5>Features (Optional - can add later)</h5>
+                  {editingPackage.features?.map((feature, idx) => (
+                    <div key={feature.id || idx} className="feature-item">
+                      <input
+                        type="text"
+                        value={feature.feature_text || ''}
+                        onChange={(e) => {
+                          const updated = {
+                            ...editingPackage,
+                            features: editingPackage.features.map((f, i) =>
+                              i === idx ? { ...f, feature_text: e.target.value } : f
+                            ),
+                          };
+                          setEditingPackage(updated);
+                        }}
+                        placeholder="Feature description"
+                      />
+                      <button
+                        className="feature-delete-btn"
+                        onClick={() => {
+                          const updated = {
+                            ...editingPackage,
+                            features: editingPackage.features.filter((_, i) => i !== idx),
+                          };
+                          setEditingPackage(updated);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    className="add-btn"
+                    style={{ marginTop: '8px', width: '100%' }}
+                    onClick={() => {
+                      const newFeature = {
+                        id: `temp_${Date.now()}`,
+                        feature_text: '',
+                        is_included: true,
+                        isNew: true,
+                      };
+                      setEditingPackage({
+                        ...editingPackage,
+                        features: [...(editingPackage.features || []), newFeature],
+                      });
+                    }}
+                  >
+                    <FaPlus /> Add Feature
+                  </button>
+                </div>
+              )}
 
               <div className="modal-actions">
                 <button

@@ -77,39 +77,51 @@ const LocalPricing = ({ pricing, heading, description }) => {
         </div>
 
         <div className="localPricingGrid">
-          {displayPricing.map((plan, index) => (
+          {displayPricing.map((plan, index) => {
+            const planName = plan.name || plan.title || 'Untitled';
+            const planSubtitle = plan.subtitle || plan.tag || '';
+            const planUnit = plan.unit_label || plan.locations || '';
+            const isPopular = plan.is_popular || plan.popular || false;
+            const billingPeriod = plan.billing_period || 'Month';
+
+            return (
             <div
-              className={`localPricingCard ${plan.popular ? "popularPlan" : ""}`}
+              className={`localPricingCard ${isPopular ? "popularPlan" : ""}`}
               key={index}
             >
-              {plan.popular && <div className="popularBadge">Most Popular</div>}
+              {isPopular && <div className="popularBadge">Most Popular</div>}
 
               <div className="pricingTop">
-                <span>{plan.tag}</span>
-                <h3>{plan.title}</h3>
-                <p>{plan.locations}</p>
+                <span>{planSubtitle}</span>
+                <h3>{planName}</h3>
+                <p>{planUnit}</p>
               </div>
 
               <div className="pricingPrice">
                 <small>PKR</small>
                 <h4>{plan.price}</h4>
-                <span>/ Month</span>
+                <span>/ {billingPeriod}</span>
               </div>
 
               <ul className="pricingFeatures">
-                {plan.features.map((feature, i) => (
-                  <li key={i}>
-                    <span>✓</span>
-                    {feature}
-                  </li>
-                ))}
+                {(plan.features || []).map((feature, i) => {
+                  const featureText = typeof feature === 'string' ? feature : feature.feature_text;
+                  const isDisabled = typeof feature === 'object' && feature.is_disabled;
+                  return (
+                    <li key={i} className={isDisabled ? 'disabled' : ''}>
+                      <span>{isDisabled ? '×' : '✓'}</span>
+                      {featureText}
+                    </li>
+                  );
+                })}
               </ul>
 
               <a href="#" className="pricingBtn">
                 Order Now
               </a>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

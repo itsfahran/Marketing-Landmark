@@ -45,7 +45,7 @@
 
 .geoPricingCard {
   position: relative;
-  background: rgba(255, 255, 255, 0.92);
+  background: #ffffff;
   border: 1px solid rgba(37, 35, 129, 0.14);
   border-radius: 30px;
   padding: 28px;
@@ -409,8 +409,8 @@
   }
 
   .geoPricingGrid {
-    grid-template-columns: 1fr;
-    max-width: 620px;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 900px;
   }
 
   .geoPricingPopular {

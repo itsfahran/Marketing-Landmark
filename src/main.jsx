@@ -16,6 +16,9 @@ import About from "./Pages/About/About.jsx";
 import Portfolio from "./Pages/Portfolio/Portfolio.jsx";
 import Contact from "./Pages/Contact/Contact.jsx";
 import Blog from "./Pages/Blog/Blog.jsx";
+import Seo from "./Pages/Seo/Seo.jsx";
+import Geo from "./Pages/Geo/Geo.jsx";
+import Local from "./Pages/Local-Seo/Local.jsx";
 
 // Admin components
 import {
@@ -36,6 +39,8 @@ import AdminContactSubmissions from "./Pages/Admin/AdminContactSubmissions.jsx";
 import AdminBlogManager from "./Pages/Admin/AdminBlogManager.jsx";
 import AdminPagesList from "./Pages/Admin/AdminPagesList.jsx";
 import AdminPageBuilder from "./Pages/Admin/AdminPageBuilder.jsx";
+import AdminHireManager from "./Pages/Admin/AdminHireManager.jsx";
+import AdminCaseStudiesManager from "./Pages/Admin/AdminCaseStudiesManager.jsx";
 import DynamicPageBuilder from "./Pages/DynamicPageBuilder.jsx";
 
 const router = createBrowserRouter(
@@ -44,6 +49,9 @@ const router = createBrowserRouter(
       {/* Public routes */}
       <Route path="/" element={<Layout />}>
         <Route path="" element={<Home />} />
+        <Route path="seo" element={<Seo />} />
+        <Route path="geo" element={<Geo />} />
+        <Route path="local" element={<Local />} />
         <Route path="about" element={<About />} />
         <Route path="portfolio" element={<Portfolio />} />
         <Route path="contact" element={<Contact />} />
@@ -59,6 +67,8 @@ const router = createBrowserRouter(
         <Route path="portfolio-page" element={<AdminPortfolioPage />} />
         <Route path="contact-submissions" element={<AdminContactSubmissions />} />
         <Route path="blog-manager" element={<AdminBlogManager />} />
+        <Route path="hire-manager" element={<AdminHireManager />} />
+        <Route path="case-studies-manager" element={<AdminCaseStudiesManager />} />
         <Route path="pages" element={<AdminPagesList />} />
         <Route path="pages/new" element={<AdminPageBuilder />} />
         <Route path="pages/:pageId" element={<AdminPageBuilder />} />

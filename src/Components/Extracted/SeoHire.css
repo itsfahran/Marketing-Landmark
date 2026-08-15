@@ -1,0 +1,109 @@
+.seo-hire {
+  padding: 60px 20px;
+  background: #f8f9fa;
+}
+
+.seo-hire-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.seo-hire-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.seo-hire-description {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.seo-hire-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.seo-hire-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.seo-hire-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.seo-hire-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.seo-hire-card-content {
+  padding: 20px;
+}
+
+.seo-hire-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+.seo-hire-card-rating {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.stars {
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.review-count {
+  color: #999;
+}
+
+.seo-hire-card-price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #7c3aed;
+  margin: 0;
+}
+
+.no-items-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .seo-hire {
+    padding: 40px 15px;
+  }
+
+  .seo-hire-heading {
+    font-size: 1.8rem;
+  }
+
+  .seo-hire-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

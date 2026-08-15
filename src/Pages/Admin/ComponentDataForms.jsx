@@ -4,6 +4,9 @@ import { COMPONENTS } from '../../lib/pageBuilderConfig';
 import ScopeCardManager from './ScopeCardManager';
 import PricingManager from './PricingManager';
 import ProcessStepsManager from './ProcessStepsManager';
+import CMSManager from './CMSManager';
+import HireManager from './HireManager';
+import CaseStudiesManager from './CaseStudiesManager';
 import './ComponentDataForms.css';
 
 const ComponentDataForms = ({ pageId, selectedComponents }) => {
@@ -101,6 +104,9 @@ const ComponentDataForms = ({ pageId, selectedComponents }) => {
   const scopeComp = selectedComponents.find(c => c.id === 'scope');
   const pricingComp = selectedComponents.find(c => c.id === 'pricing');
   const processComp = selectedComponents.find(c => c.id === 'process');
+  const cmsComp = selectedComponents.find(c => c.id === 'cms');
+  const hireComp = selectedComponents.find(c => c.id === 'hire');
+  const casestudiesComp = selectedComponents.find(c => c.id === 'casestudies');
 
   return (
     <div className="cdf-container">
@@ -142,6 +148,33 @@ const ComponentDataForms = ({ pageId, selectedComponents }) => {
           processData={componentData[`${processComp.id}-${processComp.template}`]}
           pageId={pageId}
           template={processComp.template}
+          onClose={() => setOpenManager(null)}
+        />
+      )}
+
+      {cmsComp && openManager === 'cms' && (
+        <CMSManager
+          cmsData={componentData[`${cmsComp.id}-${cmsComp.template}`]}
+          pageId={pageId}
+          template={cmsComp.template}
+          onClose={() => setOpenManager(null)}
+        />
+      )}
+
+      {hireComp && openManager === 'hire' && (
+        <HireManager
+          hireData={componentData[`${hireComp.id}-${hireComp.template}`]}
+          pageId={pageId}
+          template={hireComp.template}
+          onClose={() => setOpenManager(null)}
+        />
+      )}
+
+      {casestudiesComp && openManager === 'casestudies' && (
+        <CaseStudiesManager
+          casestudiesData={componentData[`${casestudiesComp.id}-${casestudiesComp.template}`]}
+          pageId={pageId}
+          template={casestudiesComp.template}
           onClose={() => setOpenManager(null)}
         />
       )}
@@ -436,6 +469,75 @@ function ComponentForm({ componentId, template, data, onChange, onSave, setOpenM
               value={data.image_url || ''}
               onChange={(v) => onChange('image_url', v)}
             />
+          </>
+        )}
+
+        {/* CMS Component Fields */}
+        {componentId === 'cms' && (
+          <>
+            <FormField
+              label="Heading"
+              value={data.heading || ''}
+              onChange={(v) => onChange('heading', v)}
+            />
+            <FormField
+              label="Description"
+              type="textarea"
+              value={data.description || ''}
+              onChange={(v) => onChange('description', v)}
+            />
+            <button
+              className="cdf-manage-btn"
+              onClick={() => setOpenManager('cms')}
+            >
+              💻 Manage CMS Items
+            </button>
+          </>
+        )}
+
+        {/* HIRE Component Fields */}
+        {componentId === 'hire' && (
+          <>
+            <FormField
+              label="Heading"
+              value={data.heading || ''}
+              onChange={(v) => onChange('heading', v)}
+            />
+            <FormField
+              label="Description"
+              type="textarea"
+              value={data.description || ''}
+              onChange={(v) => onChange('description', v)}
+            />
+            <button
+              className="cdf-manage-btn"
+              onClick={() => setOpenManager('hire')}
+            >
+              💼 Manage Hire/Gigs
+            </button>
+          </>
+        )}
+
+        {/* CASESTUDIES Component Fields */}
+        {componentId === 'casestudies' && (
+          <>
+            <FormField
+              label="Heading"
+              value={data.heading || ''}
+              onChange={(v) => onChange('heading', v)}
+            />
+            <FormField
+              label="Description"
+              type="textarea"
+              value={data.description || ''}
+              onChange={(v) => onChange('description', v)}
+            />
+            <button
+              className="cdf-manage-btn"
+              onClick={() => setOpenManager('casestudies')}
+            >
+              📸 Manage Case Studies
+            </button>
           </>
         )}
       </div>

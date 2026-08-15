@@ -1,0 +1,263 @@
+.geoHireSection {
+  width: 100%;
+  padding: 50px 8%;
+  background-color: #ffffff;
+}
+
+.geoHireContainer {
+  max-width: 1250px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 520px;
+  align-items: center;
+  gap: 70px;
+}
+
+.geoHireBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 50px;
+  background: rgba(37, 35, 129, 0.08);
+  color: #252381;
+  font-weight: 700;
+  margin-bottom: 25px;
+  font-size: 20px;
+}
+
+.geoHireContent h1 {
+  font-size: 52px;
+  line-height: 1.12;
+  color: #121212;
+  margin-bottom: 22px;
+  font-weight: 800;
+}
+
+.geoHireContent h1 span {
+  color: #252381;
+}
+
+.geoHireContent p {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #555;
+  max-width: 620px;
+}
+
+.geoHireFeatures {
+  margin: 30px 0;
+  display: grid;
+  gap: 14px;
+}
+
+.geoHireFeatures p {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #222;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0;
+}
+
+.geoHireFeatures svg {
+  color: #252381;
+}
+
+.geoHireButtons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  text-decoration: none;
+  padding: 15px 28px;
+  border-radius: 50px;
+  font-weight: 700;
+  transition: 0.3s ease;
+}
+
+.primaryBtn {
+  background: #252381;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 15px 35px rgba(37, 35, 129, 0.25);
+}
+
+.primaryBtn:hover {
+  transform: translateY(-4px);
+  background: #1b1969;
+}
+
+.secondaryBtn {
+  color: #252381;
+  border: 2px solid #252381;
+  background: transparent;
+}
+
+.secondaryBtn:hover {
+  background: #252381;
+  color: #fff;
+}
+
+.geoHireCard {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 30px 80px rgba(37, 35, 129, 0.18);
+  border: 1px solid rgba(37, 35, 129, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.geoHireCard::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: #252381;
+  opacity: 0.08;
+  border-radius: 50%;
+  top: -70px;
+  right: -70px;
+}
+
+.cardImageBox {
+  width: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #252381;
+}
+
+.cardImageBox img {
+  width: 100%;
+  height: 310px;
+  object-fit: cover;
+  display: block;
+}
+
+.cardContent {
+  padding: 24px 10px 10px;
+}
+
+.cardContent h3 {
+  font-size: 24px;
+  line-height: 1.35;
+  color: #151515;
+  margin-bottom: 22px;
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: #555;
+  font-size: 15px;
+}
+
+.cardMeta span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardMeta svg {
+  color: #ffb800;
+}
+
+.cardMeta strong {
+  color: #252381;
+}
+
+.fiverrIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+  .geoHireSection {
+    padding: 60px 5%;
+  }
+
+  .geoHireContainer {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .geoHireContent h1 {
+    font-size: 34px;
+  }
+
+  .geoHireContent p {
+    font-size: 16px;
+  }
+
+  .geoHireButtons {
+    gap: 12px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    padding: 13px 22px;
+  }
+
+  .cardImageBox img {
+    height: 230px;
+  }
+
+  .cardContent h3 {
+    font-size: 20px;
+  }
+
+  .cardMeta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .geoHireSection {
+    padding: 70px 6%;
+  }
+
+  .geoHireContainer {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .geoHireContent {
+    max-width: 720px;
+  }
+
+  .geoHireContent h1 {
+    font-size: 44px;
+  }
+
+  .geoHireContent p {
+    font-size: 17px;
+  }
+
+  .geoHireCard {
+    max-width: 620px;
+    width: 100%;
+  }
+
+  .cardImageBox img {
+    height: 330px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .geoHireContainer {
+    grid-template-columns: 1fr 520px;
+  }
+}

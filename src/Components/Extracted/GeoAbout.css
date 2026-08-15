@@ -1,0 +1,228 @@
+.geoModernInfo {
+  width: 100%;
+  padding: 80px 7% 50px;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.geoModernInfo::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -160px;
+  top: -170px;
+  background: rgba(37, 35, 129, 0.09);
+  border-radius: 50%;
+}
+
+.geoModernWrap {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  align-items: center;
+  gap: 70px;
+  position: relative;
+  z-index: 2;
+}
+
+.geoModernText {
+  animation: geoFadeUp 0.8s ease both;
+}
+
+.geoModernTag {
+  display: inline-flex;
+  padding: 10px 18px;
+  border-radius: 100px;
+  background: rgba(37, 35, 129, 0.09);
+  color: #252381;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 22px;
+  border: 1px solid rgba(37, 35, 129, 0.18);
+}
+
+.geoModernText h2 {
+  max-width: 620px;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.13;
+  color: #101010;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 22px;
+}
+
+.geoModernText h2 span {
+  display: block;
+  color: #252381;
+}
+
+.geoModernText p {
+  max-width: 620px;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.geoModernPoints {
+  display: grid;
+  gap: 14px;
+}
+
+.geoModernPoints div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(37, 35, 129, 0.1);
+  border-radius: 18px;
+  box-shadow: 0 14px 35px rgba(37, 35, 129, 0.08);
+  transition: 0.35s ease;
+}
+
+.geoModernPoints div:hover {
+  transform: translateX(8px);
+  border-color: rgba(37, 35, 129, 0.25);
+  box-shadow: 0 22px 45px rgba(37, 35, 129, 0.14);
+}
+
+.geoModernPoints strong {
+  min-width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: #252381;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.geoModernPoints span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+}
+
+.geoModernMedia {
+  position: relative;
+  animation: geoFadeRight 0.9s ease both;
+}
+
+.geoVideoCard {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 14px;
+  border-radius: 30px;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #252381, rgba(37, 35, 129, 0.25)) border-box;
+  border: 2px solid transparent;
+  box-shadow: 0 30px 70px rgba(37, 35, 129, 0.22);
+  overflow: hidden;
+  transition: 0.4s ease;
+}
+
+.geoVideoCard:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 40px 85px rgba(37, 35, 129, 0.3);
+}
+
+.geoVideoCard iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 20px;
+}
+
+.geoFloatingBadge {
+  position: absolute;
+  left: -35px;
+  bottom: -28px;
+  padding: 18px 24px;
+  border-radius: 22px;
+  background: #252381;
+  color: white;
+  box-shadow: 0 22px 45px rgba(37, 35, 129, 0.3);
+  animation: geoFloat 4s ease-in-out infinite;
+}
+
+.geoFloatingBadge strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.geoFloatingBadge span {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+@keyframes geoFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes geoFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes geoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .geoModernWrap {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .geoModernText h2 {
+    font-size: clamp(24px, 3vw, 40px);
+  }
+}
+
+@media (max-width: 768px) {
+  .geoModernInfo {
+    padding: 60px 5%;
+  }
+
+  .geoModernWrap {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .geoModernText h2 {
+    font-size: 28px;
+  }
+
+  .geoFloatingBadge {
+    left: auto;
+    right: 20px;
+    bottom: auto;
+    top: -35px;
+  }
+}

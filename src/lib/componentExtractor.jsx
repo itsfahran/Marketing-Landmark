@@ -14,6 +14,12 @@ import Geo_Benefits from '../Pages/Geo/Geo_Benefits';
 
 // Import extracted GEO components
 import GeoHero from '../components/Extracted/GeoHero';
+import SeoProcess from '../components/Extracted/SeoProcess';
+import SeoCMS from '../components/Extracted/SeoCMS';
+import SeoHire from '../components/Extracted/SeoHire';
+import GeoHire from '../components/Extracted/GeoHire';
+import SeoCaseStudies from '../components/Extracted/SeoCaseStudies';
+import GeoAbout from '../components/Extracted/GeoAbout';
 
 // Import extracted LOCAL components
 import LocalHeroExt from '../components/Extracted/LocalHeroExt';
@@ -49,7 +55,7 @@ export const SeoPricingComponent = ({ data }) => {
 
 // === SEO PROCESS ===
 export const SeoProcessComponent = ({ data }) => {
-  return <Geo_Process processSteps={data?.processSteps} heading={data?.heading} description={data?.description} />;
+  return <SeoProcess processSteps={data?.processSteps} heading={data?.heading} description={data?.description} />;
 };
 
 // === SEO FEATURES ===
@@ -75,6 +81,51 @@ export const SeoContactComponent = ({ data }) => {
 // === SEO ABOUT ===
 export const SeoAboutComponent = ({ data }) => {
   return <Brand />;
+};
+
+// === SEO CMS ===
+export const SeoCmsComponent = ({ data }) => {
+  return <SeoCMS items={data?.items} heading={data?.heading} description={data?.description} />;
+};
+
+// === GEO CMS ===
+export const GeoCmsComponent = ({ data }) => {
+  return <SeoCMS items={data?.items} heading={data?.heading} description={data?.description} />;
+};
+
+// === LOCAL CMS ===
+export const LocalCmsComponent = ({ data }) => {
+  return <SeoCMS items={data?.items} heading={data?.heading} description={data?.description} />;
+};
+
+// === SEO HIRE ===
+export const SeoHireComponent = ({ data }) => {
+  return <SeoHire data={data} />;
+};
+
+// === GEO HIRE ===
+export const GeoHireComponent = ({ data }) => {
+  return <GeoHire data={data} />;
+};
+
+// === LOCAL HIRE ===
+export const LocalHireComponent = ({ data }) => {
+  return <GeoHire data={data} />;
+};
+
+// === SEO CASE STUDIES ===
+export const SeoCaseStudiesComponent = ({ data }) => {
+  return <SeoCaseStudies data={data} />;
+};
+
+// === GEO CASE STUDIES ===
+export const GeoCaseStudiesComponent = ({ data }) => {
+  return <SeoCaseStudies data={data} />;
+};
+
+// === LOCAL CASE STUDIES ===
+export const LocalCaseStudiesComponent = ({ data }) => {
+  return <SeoCaseStudies data={data} />;
 };
 
 // =====================================================
@@ -121,7 +172,7 @@ export const GeoContactComponent = ({ data }) => {
 
 // === GEO ABOUT ===
 export const GeoAboutComponent = ({ data }) => {
-  return <Brand />;
+  return <GeoAbout data={data} />;
 };
 
 // =====================================================
@@ -220,5 +271,20 @@ export const COMPONENT_RENDERER_MAP = {
     SEO: SeoAboutComponent,
     GEO: GeoAboutComponent,
     LOCAL: LocalAboutComponent,
+  },
+  cms: {
+    SEO: SeoCmsComponent,
+    GEO: GeoCmsComponent,
+    LOCAL: LocalCmsComponent,
+  },
+  hire: {
+    SEO: SeoHireComponent,
+    GEO: GeoHireComponent,
+    LOCAL: LocalHireComponent,
+  },
+  casestudies: {
+    SEO: SeoCaseStudiesComponent,
+    GEO: GeoCaseStudiesComponent,
+    LOCAL: LocalCaseStudiesComponent,
   },
 };

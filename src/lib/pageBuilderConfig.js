@@ -65,6 +65,27 @@ export const COMPONENTS = {
     icon: '📧',
     order: 9,
   },
+  cms: {
+    id: 'cms',
+    name: 'CMS',
+    description: 'CMS platforms we support',
+    icon: '💻',
+    order: 10,
+  },
+  hire: {
+    id: 'hire',
+    name: 'Hire/Gigs',
+    description: 'Hire me / Fiverr gigs section',
+    icon: '💼',
+    order: 11,
+  },
+  casestudies: {
+    id: 'casestudies',
+    name: 'Case Studies',
+    description: 'Portfolio and case studies',
+    icon: '📸',
+    order: 12,
+  },
 };
 
 export const TEMPLATE_VARIANTS = {
@@ -77,6 +98,9 @@ export const TEMPLATE_VARIANTS = {
   about: ['SEO', 'GEO', 'LOCAL'],
   cta: ['SEO', 'GEO', 'LOCAL'],
   contact: ['SEO', 'GEO', 'LOCAL'],
+  cms: ['SEO', 'GEO', 'LOCAL'],
+  hire: ['SEO', 'GEO', 'LOCAL'],
+  casestudies: ['SEO', 'GEO', 'LOCAL'],
 };
 
 // Get all available components

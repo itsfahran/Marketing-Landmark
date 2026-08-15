@@ -19,6 +19,9 @@ import Portfolio from './Pages/Portfolio/Portfolio';
 import Contact from './Pages/Contact/Contact';
 import Blog from './Pages/Blog/Blog';
 import NotFound from './Pages/NotFound';
+import Seo from './Pages/Seo/Seo';
+import Geo from './Pages/Geo/Geo';
+import Local from './Pages/Local-Seo/Local';
 
 // Loaders (imported for SSR, ignored on client hydration)
 // The server uses these; the client hydrates from window.__staticRouterHydrationData__
@@ -48,6 +51,16 @@ export const routes = createRoutesFromElements(
         return { ...home, ...global };
       }}
     />
+
+    {/* Hardcoded service pages */}
+    <Route path="seo" element={<Seo />} />
+    <Route path="geo" element={<Geo />} />
+    <Route path="local" element={<Local />} />
+
+    {/* Other hardcoded pages */}
+    <Route path="about" element={<About />} />
+    <Route path="portfolio" element={<Portfolio />} />
+    <Route path="contact" element={<Contact />} />
 
     {/* Dynamic route for any page slug /:slug - Placeholder; template selected per page.template_type */}
     <Route

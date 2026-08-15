@@ -567,9 +567,9 @@ export async function fetchHero() {
   const { data, error } = await supabaseClient
     .from('hero')
     .select('*')
-    .single();
+    .limit(1);
   if (error) console.error('Error fetching hero:', error);
-  return data;
+  return data?.[0];
 }
 
 export async function updateHero(updates) {
@@ -630,9 +630,9 @@ export async function fetchAbout() {
   const { data, error } = await supabaseClient
     .from('about')
     .select('*')
-    .single();
+    .limit(1);
   if (error) console.error('Error fetching about:', error);
-  return data;
+  return data?.[0];
 }
 
 export async function updateAbout(updates) {
@@ -693,9 +693,9 @@ export async function fetchContactSection() {
   const { data, error } = await supabaseClient
     .from('contact')
     .select('*')
-    .single();
+    .limit(1);
   if (error) console.error('Error fetching contact:', error);
-  return data;
+  return data?.[0];
 }
 
 // ========== ABOUT PAGE QUERIES ==========
@@ -705,9 +705,9 @@ export async function fetchAboutPageHero() {
   const { data, error } = await supabaseClient
     .from('about_page_hero')
     .select('*')
-    .single();
+    .limit(1);
   if (error) console.error('Error fetching about hero:', error);
-  return data;
+  return data?.[0];
 }
 
 export async function fetchAboutPageMarquee() {

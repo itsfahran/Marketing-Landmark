@@ -15,9 +15,29 @@ const iconMap = {
   MdAutoGraph: <MdAutoGraph />,
 };
 
+const defaultServices = [
+  {
+    id: '1',
+    icon_name: 'FaSearch',
+    name: 'SEO Optimization',
+    description: 'Boost your online visibility with expert SEO strategies',
+  },
+  {
+    id: '2',
+    icon_name: 'FaMapMarkerAlt',
+    name: 'Local SEO',
+    description: 'Dominate local search results in your area',
+  },
+  {
+    id: '3',
+    icon_name: 'MdAutoGraph',
+    name: 'Growth Marketing',
+    description: 'Accelerate your business growth with data-driven strategies',
+  },
+];
+
 const Service = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState(defaultServices);
 
   useEffect(() => {
     loadServices();
@@ -26,15 +46,13 @@ const Service = () => {
   const loadServices = async () => {
     try {
       const data = await fetchServices();
-      setServices(data);
+      if (data && data.length > 0) {
+        setServices(data);
+      }
     } catch (error) {
       console.error("Error loading services:", error);
-    } finally {
-      setLoading(false);
     }
   };
-
-  if (loading) return <section className="service-section"><h2>Loading...</h2></section>;
   return (
     <section className="service-section">
       <div className="service-header">

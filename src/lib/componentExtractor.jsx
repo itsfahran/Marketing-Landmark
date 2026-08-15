@@ -6,23 +6,23 @@
 import React from 'react';
 
 // Import extracted SEO components
-import SeoHero from '../components/Extracted/SeoHero';
+import SeoHero from '../Components/Extracted/SeoHero';
 import Geo_Scope from '../Pages/Geo/Geo_Scope';
 import Geo_Pricing from '../Pages/Geo/Geo_Pricing';
 import Geo_Process from '../Pages/Geo/Geo_Process';
 import Geo_Benefits from '../Pages/Geo/Geo_Benefits';
 
 // Import extracted GEO components
-import GeoHero from '../components/Extracted/GeoHero';
-import SeoProcess from '../components/Extracted/SeoProcess';
-import SeoCMS from '../components/Extracted/SeoCMS';
-import SeoHire from '../components/Extracted/SeoHire';
-import GeoHire from '../components/Extracted/GeoHire';
-import SeoCaseStudies from '../components/Extracted/SeoCaseStudies';
-import GeoAbout from '../components/Extracted/GeoAbout';
+import GeoHero from '../Components/Extracted/GeoHero';
+import SeoProcess from '../Components/Extracted/SeoProcess';
+import SeoCMS from '../Components/Extracted/SeoCMS';
+import SeoHire from '../Components/Extracted/SeoHire';
+import GeoHire from '../Components/Extracted/GeoHire';
+import SeoCaseStudies from '../Components/Extracted/SeoCaseStudies';
+import GeoAbout from '../Components/Extracted/GeoAbout';
 
 // Import extracted LOCAL components
-import LocalHeroExt from '../components/Extracted/LocalHeroExt';
+import LocalHeroExt from '../Components/Extracted/LocalHeroExt';
 import LocalScope from '../Pages/Local-Seo/LocalScope';
 import LocalPricing from '../Pages/Local-Seo/LocalPricing';
 

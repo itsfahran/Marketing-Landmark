@@ -14,7 +14,6 @@ import { fetchHero } from '../../lib/supabase-queries'
 
 const Home = () => {
   const [heroData, setHeroData] = useState(null)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     loadHeroData()
@@ -34,12 +33,8 @@ const Home = () => {
       }
     } catch (error) {
       console.error('Error loading hero:', error)
-    } finally {
-      setLoading(false)
     }
   }
-
-  if (loading) return <div>Loading...</div>
 
   return (
     <>

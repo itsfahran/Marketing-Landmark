@@ -7,6 +7,7 @@ import ProcessStepsManager from './ProcessStepsManager';
 import CMSManager from './CMSManager';
 import HireManager from './HireManager';
 import CaseStudiesManager from './CaseStudiesManager';
+import VideoTestimonialsManager from './VideoTestimonialsManager';
 import './ComponentDataForms.css';
 
 const ComponentDataForms = ({ pageId, selectedComponents }) => {
@@ -107,6 +108,7 @@ const ComponentDataForms = ({ pageId, selectedComponents }) => {
   const cmsComp = selectedComponents.find(c => c.id === 'cms');
   const hireComp = selectedComponents.find(c => c.id === 'hire');
   const casestudiesComp = selectedComponents.find(c => c.id === 'casestudies');
+  const videoTestimonialsComp = selectedComponents.find(c => c.id === 'videotestimonials');
 
   return (
     <div className="cdf-container">
@@ -175,6 +177,15 @@ const ComponentDataForms = ({ pageId, selectedComponents }) => {
           casestudiesData={componentData[`${casestudiesComp.id}-${casestudiesComp.template}`]}
           pageId={pageId}
           template={casestudiesComp.template}
+          onClose={() => setOpenManager(null)}
+        />
+      )}
+
+      {videoTestimonialsComp && openManager === 'videotestimonials' && (
+        <VideoTestimonialsManager
+          videoData={componentData[`${videoTestimonialsComp.id}-${videoTestimonialsComp.template}`]}
+          pageId={pageId}
+          template={videoTestimonialsComp.template}
           onClose={() => setOpenManager(null)}
         />
       )}
@@ -537,6 +548,29 @@ function ComponentForm({ componentId, template, data, onChange, onSave, setOpenM
               onClick={() => setOpenManager('casestudies')}
             >
               📸 Manage Case Studies
+            </button>
+          </>
+        )}
+
+        {/* VIDEO TESTIMONIALS Component Fields */}
+        {componentId === 'videotestimonials' && (
+          <>
+            <FormField
+              label="Heading"
+              value={data.heading || ''}
+              onChange={(v) => onChange('heading', v)}
+            />
+            <FormField
+              label="Description"
+              type="textarea"
+              value={data.description || ''}
+              onChange={(v) => onChange('description', v)}
+            />
+            <button
+              className="cdf-manage-btn"
+              onClick={() => setOpenManager('videotestimonials')}
+            >
+              🎥 Manage Video Testimonials
             </button>
           </>
         )}

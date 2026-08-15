@@ -20,6 +20,7 @@ import SeoHire from '../Components/Extracted/SeoHire';
 import GeoHire from '../Components/Extracted/GeoHire';
 import SeoCaseStudies from '../Components/Extracted/SeoCaseStudies';
 import GeoAbout from '../Components/Extracted/GeoAbout';
+import VideoTestimonials from '../Components/Extracted/VideoTestimonials';
 
 // Import extracted LOCAL components
 import LocalHeroExt from '../Components/Extracted/LocalHeroExt';
@@ -126,6 +127,21 @@ export const GeoCaseStudiesComponent = ({ data }) => {
 // === LOCAL CASE STUDIES ===
 export const LocalCaseStudiesComponent = ({ data }) => {
   return <SeoCaseStudies data={data} />;
+};
+
+// === SEO VIDEO TESTIMONIALS ===
+export const SeoVideoTestimonialsComponent = ({ data }) => {
+  return <VideoTestimonials data={data} />;
+};
+
+// === GEO VIDEO TESTIMONIALS ===
+export const GeoVideoTestimonialsComponent = ({ data }) => {
+  return <VideoTestimonials data={data} />;
+};
+
+// === LOCAL VIDEO TESTIMONIALS ===
+export const LocalVideoTestimonialsComponent = ({ data }) => {
+  return <VideoTestimonials data={data} />;
 };
 
 // =====================================================
@@ -286,5 +302,10 @@ export const COMPONENT_RENDERER_MAP = {
     SEO: SeoCaseStudiesComponent,
     GEO: GeoCaseStudiesComponent,
     LOCAL: LocalCaseStudiesComponent,
+  },
+  videotestimonials: {
+    SEO: SeoVideoTestimonialsComponent,
+    GEO: GeoVideoTestimonialsComponent,
+    LOCAL: LocalVideoTestimonialsComponent,
   },
 };

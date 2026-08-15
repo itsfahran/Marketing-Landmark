@@ -86,6 +86,13 @@ export const COMPONENTS = {
     icon: '📸',
     order: 12,
   },
+  videotestimonials: {
+    id: 'videotestimonials',
+    name: 'Video Testimonials',
+    description: 'Client video testimonials and reviews',
+    icon: '🎥',
+    order: 13,
+  },
 };
 
 export const TEMPLATE_VARIANTS = {
@@ -101,6 +108,7 @@ export const TEMPLATE_VARIANTS = {
   cms: ['SEO', 'GEO', 'LOCAL'],
   hire: ['SEO', 'GEO', 'LOCAL'],
   casestudies: ['SEO', 'GEO', 'LOCAL'],
+  videotestimonials: ['SEO', 'GEO', 'LOCAL'],
 };
 
 // Get all available components

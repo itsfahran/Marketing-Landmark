@@ -97,6 +97,13 @@ const DynamicPageBuilder = () => {
                 .eq('casestudies_id', compData.id)
                 .order('sort_order', { ascending: true });
               compData.items = caseItems || [];
+            } else if (comp.id === 'videotestimonials') {
+              const { data: videoItems } = await supabase
+                .from('component_videotestimonials_items')
+                .select('*')
+                .eq('videotestimonials_id', compData.id)
+                .order('sort_order', { ascending: true });
+              compData.items = videoItems || [];
             }
 
             dataMap[`${comp.id}-${comp.template}`] = compData;

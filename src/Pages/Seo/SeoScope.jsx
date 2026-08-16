@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
-import "./Geo_Scope.css";
+import "../Geo/Geo_Scope.css";
 
 const seoScopeData = [
   {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getSupabaseClient } from '../../lib/supabase';
+import { uploadImage } from '../../lib/imageUpload';
 import './ItemManager.css';
 import { FaEdit, FaTrash, FaPlus, FaSave, FaTimes, FaGripVertical } from 'react-icons/fa';
 
@@ -83,6 +84,7 @@ const TestimonialsManager = ({ onClose }) => {
             rating: item.rating,
             client_image: item.client_image,
             source_platform: item.source_platform,
+            platform_icon_url: item.platform_icon_url,
             sort_order: item.sort_order,
           })
           .eq('id', item.id);
@@ -95,6 +97,19 @@ const TestimonialsManager = ({ onClose }) => {
     } catch (err) {
       console.error('Error saving testimonial:', err);
       alert('Error saving testimonial');
+    }
+  };
+
+  const handleIconUpload = async (file, isNew) => {
+    try {
+      const url = await uploadImage(file);
+      if (isNew) {
+        // For new testimonials, we'd need to handle this differently
+      } else {
+        setEditItem({ ...editItem, platform_icon_url: url });
+      }
+    } catch (error) {
+      alert('Icon upload failed: ' + error.message);
     }
   };
 
@@ -276,6 +291,39 @@ const TestimonialsManager = ({ onClose }) => {
                         borderRadius: 'var(--radius-md)',
                       }}
                     />
+                  </div>
+
+                  <div style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>
+                      Platform Icon/Logo (Optional)
+                    </label>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <input
+                        type="text"
+                        placeholder="Icon URL (e.g., https://...)"
+                        value={editItem.platform_icon_url || ''}
+                        onChange={(e) => setEditItem({ ...editItem, platform_icon_url: e.target.value })}
+                        style={{
+                          flex: 1,
+                          padding: 'var(--spacing-md)',
+                          border: '1px solid var(--border)',
+                          borderRadius: 'var(--radius-md)',
+                        }}
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            handleIconUpload(e.target.files[0], false);
+                          }
+                        }}
+                        style={{ flex: 0.5 }}
+                      />
+                    </div>
+                    {editItem.platform_icon_url && (
+                      <img src={editItem.platform_icon_url} alt="icon preview" style={{ maxWidth: '60px', marginTop: '8px', borderRadius: '8px' }} />
+                    )}
                   </div>
 
                   <div style={{ marginBottom: '15px' }}>

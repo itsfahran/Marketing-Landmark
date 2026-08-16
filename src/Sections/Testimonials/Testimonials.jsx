@@ -164,13 +164,19 @@ const Testimonials = () => {
           const isLogoLeft = rowIndex % 2 === 0;
           const platformIcon = getPlatformLogo(platform);
           const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+          // Check if any testimonial has a custom platform_icon_url
+          const customIconUrl = platformTestimonials.find(t => t.platform_icon_url)?.platform_icon_url;
 
           return (
             <div key={platform} className={`testimonial-row ${isLogoLeft ? 'logo-left' : 'logo-right'}`}>
               {isLogoLeft && (
                 <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px' }}>
-                    {platformIcon}
+                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px', overflow: 'hidden' }}>
+                    {customIconUrl ? (
+                      <img src={customIconUrl} alt={platformName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      platformIcon
+                    )}
                   </div>
                 </div>
               )}
@@ -193,8 +199,12 @@ const Testimonials = () => {
 
               {!isLogoLeft && (
                 <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px' }}>
-                    {platformIcon}
+                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px', overflow: 'hidden' }}>
+                    {customIconUrl ? (
+                      <img src={customIconUrl} alt={platformName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      platformIcon
+                    )}
                   </div>
                 </div>
               )}

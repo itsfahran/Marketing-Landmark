@@ -367,9 +367,10 @@ export async function fetchGigs() {
 export async function fetchNavbarMenuItems() {
   const supabaseClient = getSupabaseClient();
   const { data, error } = await supabaseClient
-    .from('navbar_menu_items')
+    .from('navbar_items')
     .select('*')
-    .order('sort_order');
+    .eq('is_active', true)
+    .order('order_position');
   if (error) console.error('Error fetching navbar:', error);
   return data || [];
 }
@@ -583,13 +584,42 @@ export async function updateHero(updates) {
 }
 
 // SERVICES
-export async function fetchServices() {
+export async function fetchServices(onlyActive = false) {
+  const supabaseClient = getSupabaseClient();
+  let query = supabaseClient
+    .from('services')
+    .select('*');
+
+  if (onlyActive) {
+    query = query.eq('is_active', true);
+  }
+
+  const { data, error } = await query.order('sort_order');
+  if (error) console.error('Error fetching services:', error);
+  return data || [];
+}
+
+export async function fetchHomepageServices() {
   const supabaseClient = getSupabaseClient();
   const { data, error } = await supabaseClient
     .from('services')
     .select('*')
+    .eq('show_on_homepage', true)
+    .eq('is_active', true)
     .order('sort_order');
-  if (error) console.error('Error fetching services:', error);
+  if (error) console.error('Error fetching homepage services:', error);
+  return data || [];
+}
+
+export async function fetchNavbarServices() {
+  const supabaseClient = getSupabaseClient();
+  const { data, error } = await supabaseClient
+    .from('services')
+    .select('*')
+    .eq('show_in_navbar', true)
+    .eq('is_active', true)
+    .order('sort_order');
+  if (error) console.error('Error fetching navbar services:', error);
   return data || [];
 }
 

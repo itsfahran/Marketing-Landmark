@@ -19,6 +19,7 @@ import Blog from "./Pages/Blog/Blog.jsx";
 import Seo from "./Pages/Seo/Seo.jsx";
 import Geo from "./Pages/Geo/Geo.jsx";
 import Local from "./Pages/Local-Seo/Local.jsx";
+import AllServices from "./Pages/Services/AllServices.jsx";
 
 // Admin components
 import {
@@ -43,6 +44,8 @@ import AdminHireManager from "./Pages/Admin/AdminHireManager.jsx";
 import AdminCaseStudiesManager from "./Pages/Admin/AdminCaseStudiesManager.jsx";
 import HomeVideoTestimonialsManager from "./Pages/Admin/HomeVideoTestimonialsManager.jsx";
 import TestimonialsManager from "./Pages/Admin/TestimonialsManager.jsx";
+import NavbarManager from "./Pages/Admin/NavbarManager.jsx";
+import ServicesManager from "./Pages/Admin/ServicesManager.jsx";
 import DynamicPageBuilder from "./Pages/DynamicPageBuilder.jsx";
 
 const router = createBrowserRouter(
@@ -55,6 +58,8 @@ const router = createBrowserRouter(
         <Route path="geo" element={<Geo />} />
         <Route path="local" element={<Local />} />
         <Route path="about" element={<About />} />
+        <Route path="services" element={<AllServices />} />
+        <Route path="services/:slug" element={<DynamicPageBuilder />} />
         <Route path="portfolio" element={<Portfolio />} />
         <Route path="contact" element={<Contact />} />
         <Route path="page/:slug" element={<DynamicPageBuilder />} />
@@ -71,6 +76,8 @@ const router = createBrowserRouter(
         <Route path="blog-manager" element={<AdminBlogManager />} />
         <Route path="hire-manager" element={<AdminHireManager />} />
         <Route path="case-studies-manager" element={<AdminCaseStudiesManager />} />
+        <Route path="services-manager" element={<ServicesManager onClose={() => window.history.back()} />} />
+        <Route path="navbar-manager" element={<NavbarManager onClose={() => window.history.back()} />} />
         <Route path="home-video-testimonials-manager" element={<HomeVideoTestimonialsManager onClose={() => window.history.back()} />} />
         <Route path="testimonials-manager" element={<TestimonialsManager onClose={() => window.history.back()} />} />
         <Route path="pages" element={<AdminPagesList />} />

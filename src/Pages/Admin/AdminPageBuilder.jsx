@@ -121,6 +121,7 @@ const AdminPageBuilder = () => {
 
     setSaving(true);
     try {
+      // Save page
       if (pageId) {
         await supabase
           .from('pages')
@@ -141,7 +142,44 @@ const AdminPageBuilder = () => {
         });
       }
 
-      alert('Page saved!');
+      // Also save as service
+      const serviceUrl = `/services/${pageSlug}`;
+
+      // Check if service already exists
+      const { data: existingService } = await supabase
+        .from('services')
+        .select('id')
+        .eq('page_url', serviceUrl)
+        .single();
+
+      if (existingService) {
+        // Update existing service
+        await supabase
+          .from('services')
+          .update({
+            title: pageName,
+            description: pageName,
+            is_active: pageStatus === 'published',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existingService.id);
+      } else {
+        // Create new service
+        await supabase
+          .from('services')
+          .insert({
+            title: pageName,
+            description: pageName,
+            icon: '📄',
+            page_url: serviceUrl,
+            show_on_homepage: false,
+            show_in_navbar: false,
+            is_active: pageStatus === 'published',
+            sort_order: 0,
+          });
+      }
+
+      alert('Page aur Service dono saved! 🎉');
       navigate('/admin/pages');
     } catch (err) {
       alert('Error: ' + err.message);

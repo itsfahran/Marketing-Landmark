@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import VideoTestimonialsComponent from '../../components/Extracted/VideoTestimonials';
+import VideoTestimonialsComponent from '../../Components/Extracted/VideoTestimonials';
 
 const defaultVideoTestimonials = {
   heading: 'Client Video Testimonials',

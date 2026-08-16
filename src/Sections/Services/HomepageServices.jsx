@@ -66,16 +66,23 @@ const HomepageServices = () => {
 
         <div className="services-grid">
           {services.slice(0, 3).map((service) => (
-            <div key={service.id} className="service-card">
-              <div className="service-icon">
-                {renderIcon(service)}
+            <NavLink
+              key={service.id}
+              to={service.page_url || '#'}
+              className="service-card-link"
+              style={{ textDecoration: 'none' }}
+            >
+              <div className="service-card">
+                <div className="service-icon">
+                  {renderIcon(service)}
+                </div>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+                <div className="service-link">
+                  Learn More →
+                </div>
               </div>
-              <h3>{service.title}</h3>
-              <p>{service.description}</p>
-              <NavLink to={service.page_url || '#'} className="service-link">
-                Learn More →
-              </NavLink>
-            </div>
+            </NavLink>
           ))}
         </div>
 

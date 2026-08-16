@@ -69,22 +69,29 @@ const AllServices = () => {
         {services && services.length > 0 ? (
           <div className="services-grid">
             {services.map((service) => (
-              <div key={service.id} className="service-card">
-                <div className="service-icon">
-                  {renderIcon(service)}
+              <NavLink
+                key={service.id}
+                to={service.page_url || '#'}
+                className="service-card-link"
+                style={{ textDecoration: 'none' }}
+              >
+                <div className="service-card">
+                  <div className="service-icon">
+                    {renderIcon(service)}
+                  </div>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <div className="service-meta">
+                    <span className="service-status">
+                      {service.show_on_homepage && <span className="badge badge-featured">Featured</span>}
+                      {service.show_in_navbar && <span className="badge badge-navbar">In Menu</span>}
+                    </span>
+                  </div>
+                  <div className="service-link">
+                    Learn More →
+                  </div>
                 </div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <div className="service-meta">
-                  <span className="service-status">
-                    {service.show_on_homepage && <span className="badge badge-featured">Featured</span>}
-                    {service.show_in_navbar && <span className="badge badge-navbar">In Menu</span>}
-                  </span>
-                </div>
-                <NavLink to={service.page_url || '#'} className="service-link">
-                  Learn More →
-                </NavLink>
-              </div>
+              </NavLink>
             ))}
           </div>
         ) : (

@@ -15,12 +15,17 @@ const PLATFORM_ICONS = {
   other: '⭐',
 };
 
-const PLATFORM_LOGOS = {
-  upwork: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/upwork-logo.png',
-  fiverr: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/fiverr-logo.png',
-  linkedin: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/linkedin-logo.png',
-  google: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/google-logo.png',
-  freelancer: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/freelancer-logo.png',
+// Platform logo URLs - using emoji instead of missing images
+const getPlatformLogo = (platform) => {
+  const logos = {
+    upwork: '💼',
+    fiverr: '⭐',
+    linkedin: '💼',
+    google: '🔍',
+    freelancer: '👨‍💼',
+    other: '⭐',
+  };
+  return logos[platform] || logos.other;
 };
 
 const Testimonials = () => {
@@ -157,14 +162,16 @@ const Testimonials = () => {
       <div className="testimonial-rows">
         {platformRows.map(([platform, platformTestimonials], rowIndex) => {
           const isLogoLeft = rowIndex % 2 === 0;
-          const logoUrl = PLATFORM_LOGOS[platform];
+          const platformIcon = getPlatformLogo(platform);
           const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
 
           return (
             <div key={platform} className={`testimonial-row ${isLogoLeft ? 'logo-left' : 'logo-right'}`}>
-              {isLogoLeft && logoUrl && (
-                <div className="platform-logo">
-                  <img src={logoUrl} alt={platformName} title={platformName} />
+              {isLogoLeft && (
+                <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px' }}>
+                    {platformIcon}
+                  </div>
                 </div>
               )}
 
@@ -184,9 +191,11 @@ const Testimonials = () => {
                 </div>
               </div>
 
-              {!isLogoLeft && logoUrl && (
-                <div className="platform-logo">
-                  <img src={logoUrl} alt={platformName} title={platformName} />
+              {!isLogoLeft && (
+                <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px' }}>
+                    {platformIcon}
+                  </div>
                 </div>
               )}
             </div>

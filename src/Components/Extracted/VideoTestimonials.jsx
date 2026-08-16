@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './VideoTestimonials.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
@@ -7,6 +7,16 @@ const VideoTestimonials = ({ data }) => {
   const description = data?.description || '';
   const videos = data?.items || [];
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (videos.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [videos.length]);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1));

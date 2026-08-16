@@ -1,21 +1,27 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
 import "./SeoScope.css";
+import onPageImg from "../../assets/onPageImg.png";
+import offPageImg from "../../assets/offPageImg.png";
+import technicalImg from "../../assets/technicalImg.png";
 
 const seoScopeData = [
   {
     number: "01",
     title: "On Page SEO",
     description: "On-Page SEO focuses on optimizing the content and structure of your website to make it search-engine friendly and user-focused. We ensure every page is optimized to rank higher and convert visitors into customers.",
+    image: onPageImg,
   },
   {
     number: "02",
     title: "Off Page SEO",
     description: "Off-Page SEO builds your website's authority and trust through external signals and high-quality backlinks. Our goal is to increase your domain authority and establish your website as a trusted source in your industry.",
+    image: offPageImg,
   },
   {
     number: "03",
     title: "Technical SEO",
     description: "Technical SEO ensures your website is fast, secure, and easy for search engines to crawl and index. We optimize the technical foundation of your website to improve user experience, site speed, and rankings on Search Engines.",
+    image: technicalImg,
   },
 ];
 

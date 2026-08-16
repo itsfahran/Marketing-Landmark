@@ -15,6 +15,14 @@ const PLATFORM_ICONS = {
   other: '⭐',
 };
 
+const PLATFORM_LOGOS = {
+  upwork: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/upwork-logo.png',
+  fiverr: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/fiverr-logo.png',
+  linkedin: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/linkedin-logo.png',
+  google: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/google-logo.png',
+  freelancer: 'https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/freelancer-logo.png',
+};
+
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [expandedCards, setExpandedCards] = useState({});
@@ -118,7 +126,22 @@ const Testimonials = () => {
     );
   };
 
+  // Get unique platforms and group testimonials
+  const getPlatformRows = () => {
+    const platformMap = {};
+    testimonials.forEach((testimonial) => {
+      const platform = testimonial.source_platform || 'other';
+      if (!platformMap[platform]) {
+        platformMap[platform] = [];
+      }
+      platformMap[platform].push(testimonial);
+    });
+    return Object.entries(platformMap);
+  };
+
   if (loading) return <section className="testimonials-section"><h2>Loading...</h2></section>;
+
+  const platformRows = getPlatformRows();
 
   return (
     <section className="testimonials-section">
@@ -132,57 +155,43 @@ const Testimonials = () => {
       </div>
 
       <div className="testimonial-rows">
-        <div className="testimonial-row logo-left">
-          <div className="platform-logo">
-            <img
-              src="https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/upwork-logo.png"
-              alt="Upwork"
-              title="Upwork"
-            />
-          </div>
+        {platformRows.map(([platform, platformTestimonials], rowIndex) => {
+          const isLogoLeft = rowIndex % 2 === 0;
+          const logoUrl = PLATFORM_LOGOS[platform];
+          const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
 
-          <div className="testimonial-slider-window">
-            <div className="testimonial-track">
-              <div className="testimonial-group">
-                {testimonials.map((testimonial, index) =>
-                  renderTestimonialCard(testimonial, index)
-                )}
+          return (
+            <div key={platform} className={`testimonial-row ${isLogoLeft ? 'logo-left' : 'logo-right'}`}>
+              {isLogoLeft && logoUrl && (
+                <div className="platform-logo">
+                  <img src={logoUrl} alt={platformName} title={platformName} />
+                </div>
+              )}
+
+              <div className="testimonial-slider-window">
+                <div className="testimonial-track">
+                  <div className="testimonial-group">
+                    {platformTestimonials.map((testimonial, index) =>
+                      renderTestimonialCard(testimonial, `${platform}-${index}`)
+                    )}
+                  </div>
+
+                  <div className="testimonial-group" aria-hidden="true">
+                    {platformTestimonials.map((testimonial, index) =>
+                      renderTestimonialCard(testimonial, `${platform}-${index}`)
+                    )}
+                  </div>
+                </div>
               </div>
 
-              <div className="testimonial-group" aria-hidden="true">
-                {testimonials.map((testimonial, index) =>
-                  renderTestimonialCard(testimonial, index)
-                )}
-              </div>
+              {!isLogoLeft && logoUrl && (
+                <div className="platform-logo">
+                  <img src={logoUrl} alt={platformName} title={platformName} />
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-
-        <div className="testimonial-row logo-right">
-          <div className="testimonial-slider-window">
-            <div className="testimonial-track">
-              <div className="testimonial-group">
-                {testimonials.map((testimonial, index) =>
-                  renderTestimonialCard(testimonial, index)
-                )}
-              </div>
-
-              <div className="testimonial-group" aria-hidden="true">
-                {testimonials.map((testimonial, index) =>
-                  renderTestimonialCard(testimonial, index)
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="platform-logo">
-            <img
-              src="https://hrebuurabqxcvamlrzlt.supabase.co/storage/v1/object/public/portfolio-images/logos/fiverr-logo.png"
-              alt="Fiverr"
-              title="Fiverr"
-            />
-          </div>
-        </div>
+          );
+        })}
       </div>
     </section>
   );

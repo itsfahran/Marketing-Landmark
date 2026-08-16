@@ -16,9 +16,6 @@ export default function AdminLayout() {
     { label: 'About Page', path: '/admin/about-page', icon: FaBlog },
     { label: 'Portfolio Page', path: '/admin/portfolio-page', icon: FaBriefcase },
     { label: 'Blog Manager', path: '/admin/blog-manager', icon: FaBlog },
-    { label: 'Hire/Gigs Manager', path: '/admin/hire-manager', icon: FaTasks },
-    { label: 'Case Studies Manager', path: '/admin/case-studies-manager', icon: FaImages },
-    { label: 'Home Video Testimonials', path: '/admin/home-video-testimonials-manager', icon: FaVideo },
     { label: 'Contact Submissions', path: '/admin/contact-submissions', icon: FaEnvelope },
   ];
 

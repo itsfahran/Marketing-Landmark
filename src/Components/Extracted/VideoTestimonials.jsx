@@ -11,8 +11,9 @@ const VideoTestimonials = ({ data }) => {
   useEffect(() => {
     if (videos.length === 0) return;
 
+    const videosPerView = 3;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
+      setCurrentIndex((prev) => (prev + videosPerView >= videos.length ? 0 : prev + videosPerView));
     }, 5000);
 
     return () => clearInterval(interval);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { FaHome, FaBlog, FaBriefcase, FaEnvelope, FaBars, FaTimes, FaSignOutAlt, FaSearch, FaFileAlt, FaImages, FaTasks } from 'react-icons/fa';
+import { FaHome, FaBlog, FaBriefcase, FaEnvelope, FaBars, FaTimes, FaSignOutAlt, FaSearch, FaFileAlt, FaImages, FaTasks, FaVideo } from 'react-icons/fa';
 import '../../styles/admin-design-tokens.css';
 
 export default function AdminLayout() {
@@ -18,6 +18,7 @@ export default function AdminLayout() {
     { label: 'Blog Manager', path: '/admin/blog-manager', icon: FaBlog },
     { label: 'Hire/Gigs Manager', path: '/admin/hire-manager', icon: FaTasks },
     { label: 'Case Studies Manager', path: '/admin/case-studies-manager', icon: FaImages },
+    { label: 'Home Video Testimonials', path: '/admin/home-video-testimonials-manager', icon: FaVideo },
     { label: 'Contact Submissions', path: '/admin/contact-submissions', icon: FaEnvelope },
   ];
 

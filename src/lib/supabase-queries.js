@@ -803,6 +803,27 @@ export async function deleteTestimonial(id) {
   return !error;
 }
 
+// VIDEO TESTIMONIALS (HOME PAGE)
+export async function fetchHomeVideoTestimonials() {
+  const supabaseClient = getSupabaseClient();
+  const { data, error } = await supabaseClient
+    .from('home_video_testimonials_items')
+    .select('*')
+    .order('sort_order', { ascending: true });
+  if (error) console.error('Error fetching home video testimonials:', error);
+  return data || [];
+}
+
+export async function fetchHomeVideoTestimonialsWithMeta() {
+  const supabaseClient = getSupabaseClient();
+  const { data, error } = await supabaseClient
+    .from('home_video_testimonials')
+    .select('*')
+    .limit(1);
+  if (error) console.error('Error fetching home video testimonials meta:', error);
+  return data?.[0];
+}
+
 export async function createVideoTestimonial(videoData) {
   const supabaseClient = getSupabaseClient();
   const { data, error } = await supabaseClient

@@ -1,5 +1,6 @@
-﻿import React from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import VideoTestimonialsComponent from '../../Components/Extracted/VideoTestimonials';
+import { fetchHomeVideoTestimonials, fetchHomeVideoTestimonialsWithMeta } from '../../lib/supabase-queries';
 
 const defaultVideoTestimonials = {
   heading: 'Client Video Testimonials',
@@ -44,7 +45,32 @@ const defaultVideoTestimonials = {
 };
 
 const VideoTestimonials = () => {
-  return <VideoTestimonialsComponent data={defaultVideoTestimonials} />;
+  const [data, setData] = useState(defaultVideoTestimonials);
+
+  useEffect(() => {
+    loadVideoTestimonials();
+  }, []);
+
+  const loadVideoTestimonials = async () => {
+    try {
+      const [meta, items] = await Promise.all([
+        fetchHomeVideoTestimonialsWithMeta(),
+        fetchHomeVideoTestimonials(),
+      ]);
+
+      if (items && items.length > 0) {
+        setData({
+          heading: meta?.heading || defaultVideoTestimonials.heading,
+          description: meta?.description || defaultVideoTestimonials.description,
+          items: items,
+        });
+      }
+    } catch (error) {
+      console.error('Error loading video testimonials:', error);
+    }
+  };
+
+  return <VideoTestimonialsComponent data={data} />;
 };
 
 export default VideoTestimonials;

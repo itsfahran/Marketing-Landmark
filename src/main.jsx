@@ -41,6 +41,7 @@ import AdminPagesList from "./Pages/Admin/AdminPagesList.jsx";
 import AdminPageBuilder from "./Pages/Admin/AdminPageBuilder.jsx";
 import AdminHireManager from "./Pages/Admin/AdminHireManager.jsx";
 import AdminCaseStudiesManager from "./Pages/Admin/AdminCaseStudiesManager.jsx";
+import HomeVideoTestimonialsManager from "./Pages/Admin/HomeVideoTestimonialsManager.jsx";
 import DynamicPageBuilder from "./Pages/DynamicPageBuilder.jsx";
 
 const router = createBrowserRouter(
@@ -69,6 +70,7 @@ const router = createBrowserRouter(
         <Route path="blog-manager" element={<AdminBlogManager />} />
         <Route path="hire-manager" element={<AdminHireManager />} />
         <Route path="case-studies-manager" element={<AdminCaseStudiesManager />} />
+        <Route path="home-video-testimonials-manager" element={<HomeVideoTestimonialsManager onClose={() => window.history.back()} />} />
         <Route path="pages" element={<AdminPagesList />} />
         <Route path="pages/new" element={<AdminPageBuilder />} />
         <Route path="pages/:pageId" element={<AdminPageBuilder />} />

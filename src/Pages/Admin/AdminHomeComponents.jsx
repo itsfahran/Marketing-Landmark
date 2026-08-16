@@ -262,17 +262,17 @@ export default function AdminHomeComponents() {
     setLoading(true);
     try {
       const queries = {
-        hero: () => supabase.from('hero').select('*').single(),
+        hero: () => supabase.from('hero').select('*').limit(1),
         services: () => supabase.from('services').select('*').order('sort_order'),
         process_steps: () => supabase.from('process_steps').select('*').order('sort_order'),
-        about: () => supabase.from('about').select('*').single(),
+        about: () => supabase.from('about').select('*').limit(1),
         hire_gigs: () => supabase.from('hire_gigs').select('*').order('sort_order'),
         portfolio_items: () => supabase.from('portfolio_items').select('*').order('sort_order'),
         testimonials: () => supabase.from('testimonials').select('*').order('sort_order'),
         video_testimonials: () => supabase.from('video_testimonials').select('*').order('sort_order'),
         brands: () => supabase.from('brands').select('*').order('sort_order'),
         choose_features: () => supabase.from('choose_features').select('*').order('sort_order'),
-        contact: () => supabase.from('contact').select('*').single(),
+        contact: () => supabase.from('contact').select('*').limit(1),
       };
 
       const data = {};
@@ -379,8 +379,8 @@ export default function AdminHomeComponents() {
 
       {/* Content */}
       <div>
-        {activeTab === 'hero' && allData.hero && (
-          <HeroEditor data={allData.hero} onSave={(data) => handleSave('hero', data)} />
+        {activeTab === 'hero' && allData.hero && allData.hero.length > 0 && (
+          <HeroEditor data={allData.hero[0]} onSave={(data) => handleSave('hero', data)} />
         )}
 
         {activeTab === 'services' && (
@@ -409,8 +409,8 @@ export default function AdminHomeComponents() {
           />
         )}
 
-        {activeTab === 'about' && allData.about && (
-          <HeroEditor data={allData.about} onSave={(data) => handleSave('about', data)} />
+        {activeTab === 'about' && allData.about && allData.about.length > 0 && (
+          <HeroEditor data={allData.about[0]} onSave={(data) => handleSave('about', data)} />
         )}
 
         {activeTab === 'hire' && (
@@ -491,8 +491,8 @@ export default function AdminHomeComponents() {
           />
         )}
 
-        {activeTab === 'contact' && allData.contact && (
-          <HeroEditor data={allData.contact} onSave={(data) => handleSave('contact', data)} />
+        {activeTab === 'contact' && allData.contact && allData.contact.length > 0 && (
+          <HeroEditor data={allData.contact[0]} onSave={(data) => handleSave('contact', data)} />
         )}
       </div>
     </div>

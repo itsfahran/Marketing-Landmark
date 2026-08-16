@@ -22,9 +22,9 @@ import Local from "./Pages/Local-Seo/Local.jsx";
 import AllServices from "./Pages/Services/AllServices.jsx";
 
 // Admin components
+import AdminLayout from "./Pages/Admin/AdminLayout_Professional.jsx";
+import AdminDashboard from "./Pages/Admin/AdminDashboard_Professional.jsx";
 import {
-  AdminLayout,
-  AdminDashboard,
   AdminBlog,
   AdminPortfolio,
   AdminTestimonials,

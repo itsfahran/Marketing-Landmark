@@ -2,6 +2,34 @@ import React, { useState, useEffect } from 'react';
 import './VideoTestimonials.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
+// Convert various YouTube URL formats to embed format
+const getYoutubeEmbedUrl = (url) => {
+  if (!url) return '';
+
+  // Already embed format
+  if (url.includes('youtube.com/embed')) return url;
+
+  // Extract video ID from different URL formats
+  let videoId = '';
+
+  // Format: https://www.youtube.com/watch?v=VIDEO_ID
+  if (url.includes('youtube.com/watch')) {
+    const match = url.match(/v=([a-zA-Z0-9_-]{11})/);
+    videoId = match ? match[1] : '';
+  }
+  // Format: https://youtu.be/VIDEO_ID
+  else if (url.includes('youtu.be')) {
+    const match = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    videoId = match ? match[1] : '';
+  }
+  // Format: just the video ID
+  else if (url.match(/^[a-zA-Z0-9_-]{11}$/)) {
+    videoId = url;
+  }
+
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+};
+
 const VideoTestimonials = ({ data }) => {
   const heading = data?.heading || 'Client Reviews';
   const description = data?.description || '';
@@ -60,7 +88,7 @@ const VideoTestimonials = ({ data }) => {
                 <div className="video-wrapper">
                   {video.video_url ? (
                     <iframe
-                      src={video.video_url}
+                      src={getYoutubeEmbedUrl(video.video_url)}
                       title={video.title}
                       allowFullScreen
                       loading="lazy"

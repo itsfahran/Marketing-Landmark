@@ -7,6 +7,7 @@ import React from 'react';
 
 // Import extracted SEO components
 import SeoHero from '../Components/Extracted/SeoHero';
+import SeoScope from '../Pages/Seo/SeoScope';
 import Geo_Scope from '../Pages/Geo/Geo_Scope';
 import Geo_Pricing from '../Pages/Geo/Geo_Pricing';
 import Geo_Process from '../Pages/Geo/Geo_Process';
@@ -46,7 +47,7 @@ export const SeoHeroComponent = ({ data }) => {
 
 // === SEO SCOPE ===
 export const SeoScopeComponent = ({ data }) => {
-  return <Geo_Scope scopeCards={data?.scopeCards} heading={data?.heading} description={data?.description} />;
+  return <SeoScope scopeCards={data?.scopeCards} heading={data?.heading} description={data?.description} />;
 };
 
 // === SEO PRICING ===

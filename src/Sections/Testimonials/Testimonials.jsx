@@ -5,6 +5,16 @@ import { fetchHomeTestimonials } from "../../lib/supabase-queries";
 
 const READ_MORE_LIMIT = 135;
 
+// Platform icons/badges
+const PLATFORM_ICONS = {
+  upwork: '💼',
+  fiverr: '⭐',
+  linkedin: '💼',
+  google: '🔍',
+  freelancer: '👨‍💼',
+  other: '⭐',
+};
+
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [expandedCards, setExpandedCards] = useState({});
@@ -70,6 +80,7 @@ const Testimonials = () => {
 
   const renderTestimonialCard = (testimonial, index) => {
     const cardId = `testimonial-${index}`;
+    const platformIcon = PLATFORM_ICONS[testimonial.source_platform] || PLATFORM_ICONS.other;
 
     return (
       <div
@@ -78,6 +89,11 @@ const Testimonials = () => {
         }`}
         key={cardId}
       >
+        {/* Platform Badge - Top Right */}
+        <div className="platform-badge" title={testimonial.source_platform}>
+          {platformIcon}
+        </div>
+
         <div className="client-info">
           {(testimonial.client_image || testimonial.client_avatar_url) && (
             <img src={testimonial.client_image || testimonial.client_avatar_url} alt={testimonial.client_name} />

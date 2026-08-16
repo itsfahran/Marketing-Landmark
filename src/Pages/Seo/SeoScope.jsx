@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
-import "../Geo/Geo_Scope.css";
+import "./SeoScope.css";
 
 const seoScopeData = [
   {
@@ -51,27 +51,29 @@ const SeoScope = ({ scopeCards, heading, description }) => {
   }, []);
 
   return (
-    <section ref={sectionRef} className={`geoScopeSection ${previewActive ? "preview-active" : ""}`}>
-      <div className="geoScopeHeader">
-        <span>☛ Scope</span>
-        <h2>{displayHeading}</h2>
-        <div className="geo-scope-text">
+    <section ref={sectionRef} className="scope-section">
+      <div className="scope-container">
+        <div className="scope-heading">
+          <span>☛ Scope</span>
+          <h2>{displayHeading}</h2>
           <p>{displayDescription}</p>
         </div>
-      </div>
 
-      <div className="geoScopeCards">
-        {displayData.map((item) => (
-          <div className="geoScopeCard" key={item.id || item.number}>
-            {item.image && <img src={item.image} alt={item.title} className="geoScopeImg" />}
-            <div className="geoScopeOverlay"></div>
-            <div className="geoScopeContent">
-              <span className="geoScopeNumber">{item.number || item.id?.substring(0, 2)}</span>
-              <h3>{item.title}</h3>
-              <p>{item.text || item.description}</p>
+        <div className="scope-grid">
+          {displayData.map((item) => (
+            <div className="scope-card" key={item.id || item.number}>
+              {item.image && (
+                <div className="scope-image">
+                  <img src={item.image} alt={item.title} />
+                </div>
+              )}
+              <div className="scope-content">
+                <h3>{item.title}</h3>
+                <p>{item.text || item.description}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

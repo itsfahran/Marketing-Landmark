@@ -1,10 +1,12 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./SeoScope.css";
 import onPageImg from "../../assets/onPageImg.png";
 import offPageImg from "../../assets/offPageImg.png";
 import technicalImg from "../../assets/technicalImg.png";
+import { hasDbData } from "../../lib/dataHandler";
 
-const seoScopeData = [
+// Hardcoded defaults
+const DEFAULT_SEO_SCOPE_CARDS = [
   {
     number: "01",
     title: "On Page SEO",
@@ -25,14 +27,20 @@ const seoScopeData = [
   },
 ];
 
+const DEFAULT_SEO_SCOPE = {
+  heading: "Scope Of SEO Services In Pakistan",
+  description: "Search Engine Optimization (SEO) is a complete strategy designed to improve your website's visibility, traffic, and rankings on search engines like Google. Our SEO services in Pakistan is focused on three core pillars that work together to deliver long-term, sustainable results.",
+};
+
 const SeoScope = ({ scopeCards, heading, description }) => {
   const sectionRef = useRef(null);
   const previewShown = useRef(false);
   const [previewActive, setPreviewActive] = useState(false);
 
-  const displayData = scopeCards && scopeCards.length > 0 ? scopeCards : seoScopeData;
-  const displayHeading = heading || "Scope Of SEO Services In Pakistan";
-  const displayDescription = description || "Search Engine Optimization (SEO) is a complete strategy designed to improve your website's visibility, traffic, and rankings on search engines like Google. Our SEO services in Pakistan is focused on three core pillars that work together to deliver long-term, sustainable results.";
+  // Database-first: Use database data if exists, otherwise use hardcoded defaults
+  const displayData = hasDbData(scopeCards) ? scopeCards : DEFAULT_SEO_SCOPE_CARDS;
+  const displayHeading = heading || DEFAULT_SEO_SCOPE.heading;
+  const displayDescription = description || DEFAULT_SEO_SCOPE.description;
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -61,25 +69,27 @@ const SeoScope = ({ scopeCards, heading, description }) => {
       <div className="scope-container">
         <div className="scope-heading">
           <span>☛ Scope</span>
-          <h2>{displayHeading}</h2>
-          <p>{displayDescription}</p>
+          {displayHeading && <h2>{displayHeading}</h2>}
+          {displayDescription && <p>{displayDescription}</p>}
         </div>
 
-        <div className="scope-grid">
-          {displayData.map((item) => (
-            <div className="scope-card" key={item.id || item.number}>
-              {item.image && (
-                <div className="scope-image">
-                  <img src={item.image} alt={item.title} />
+        {displayData && displayData.length > 0 && (
+          <div className="scope-grid">
+            {displayData.map((item) => (
+              <div className="scope-card" key={item.id || item.number}>
+                {item.image && (
+                  <div className="scope-image">
+                    <img src={item.image} alt={item.title || 'Scope card'} />
+                  </div>
+                )}
+                <div className="scope-content">
+                  {item.title && <h3>{item.title}</h3>}
+                  {(item.text || item.description) && <p>{item.text || item.description}</p>}
                 </div>
-              )}
-              <div className="scope-content">
-                <h3>{item.title}</h3>
-                <p>{item.text || item.description}</p>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

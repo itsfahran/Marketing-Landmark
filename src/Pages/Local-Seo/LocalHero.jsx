@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./LocalHero.css";
 import { getSupabaseClient } from "../../lib/supabase";
+import { hasDbData } from "../../lib/dataHandler";
 
 const Counter = ({ end, suffix }) => {
   const [count, setCount] = useState(0);
@@ -32,24 +33,47 @@ const Counter = ({ end, suffix }) => {
   );
 };
 
-const LocalHero = ({ heroData, businessFeatures, serviceId }) => {
-  const heading = heroData?.hero_heading || "Best Local SEO Services In Pakistan By SEO Professional";
-  const subheading = heroData?.hero_subheading || "Grow your local business visibility, rank higher on Google Maps, attract nearby customers, and build a strong online presence with result-driven Local SEO strategies.";
-  const cta1Text = heroData?.cta1_text || "Get Free SEO Audit";
-  const cta1Link = heroData?.cta1_link || "/seo";
-  const cta2Text = heroData?.cta2_text || "View Services";
-  const cta2Link = heroData?.cta2_link || "/geo";
+// Hardcoded defaults
+const DEFAULT_LOCAL_HERO = {
+  hero_heading: "Best Local SEO Services In Pakistan By SEO Professional",
+  hero_subheading: "Grow your local business visibility, rank higher on Google Maps, attract nearby customers, and build a strong online presence with result-driven Local SEO strategies.",
+  cta1_text: "Get Free SEO Audit",
+  cta1_link: "/seo",
+  cta2_text: "View Services",
+  cta2_link: "/geo",
+};
 
+const DEFAULT_BUSINESS_SECTION = {
+  business_video_url: "https://www.youtube.com/embed/YOUR_VIDEO_ID",
+  business_heading: "SEO For Local Businesses That Want More Calls, Visits & Customers",
+  business_subheading: "Local SEO helps your business appear in Google Search and Google Maps when nearby customers are actively searching for your products or services. We optimize your online presence to improve visibility, trust, traffic and conversions.",
+};
+
+const DEFAULT_BUSINESS_FEATURES = [
+  { number: '01', title: 'Google Maps Visibility', description: 'Rank higher for nearby searches and attract local buyers.' },
+  { number: '02', title: 'Business Profile Optimization', description: 'Improve your Google Business Profile for better trust.' },
+  { number: '03', title: 'High-Intent Traffic', description: 'Bring customers who are ready to call, visit or purchase.' },
+  { number: '04', title: 'Local Brand Authority', description: 'Build credibility through reviews, citations and signals.' },
+];
+
+const LocalHero = ({ heroData, businessFeatures, serviceId }) => {
   const [features, setFeatures] = useState(businessFeatures || []);
 
+  // Database-first approach: Use DB data if exists, otherwise use defaults
+  const displayHeroData = hasDbData(heroData) ? heroData : DEFAULT_LOCAL_HERO;
+  const displayBusinessData = hasDbData(heroData) ? heroData : DEFAULT_BUSINESS_SECTION;
+
   useEffect(() => {
-    // If features prop is provided, use it
+    // If features prop is provided and valid, use it
     if (businessFeatures && businessFeatures.length > 0) {
       setFeatures(businessFeatures);
     }
     // Otherwise if serviceId is provided, fetch from database
     else if (serviceId) {
       fetchBusinessFeatures();
+    } else {
+      // No features from prop or DB, use defaults
+      setFeatures(DEFAULT_BUSINESS_FEATURES);
     }
   }, [businessFeatures, serviceId]);
 
@@ -61,48 +85,56 @@ const LocalHero = ({ heroData, businessFeatures, serviceId }) => {
         .select('*')
         .eq('service_id', serviceId)
         .order('sort_order');
+
       if (data && data.length > 0) {
         setFeatures(data);
+      } else {
+        // No DB data, use defaults
+        setFeatures(DEFAULT_BUSINESS_FEATURES);
       }
     } catch (err) {
       console.log('Using default business features');
+      setFeatures(DEFAULT_BUSINESS_FEATURES);
     }
   };
 
-  // Default business features if none from database
-  const defaultFeatures = [
-    { number: '01', title: 'Google Maps Visibility', description: 'Rank higher for nearby searches and attract local buyers.' },
-    { number: '02', title: 'Business Profile Optimization', description: 'Improve your Google Business Profile for better trust.' },
-    { number: '03', title: 'High-Intent Traffic', description: 'Bring customers who are ready to call, visit or purchase.' },
-    { number: '04', title: 'Local Brand Authority', description: 'Build credibility through reviews, citations and signals.' },
-  ];
-
-  const displayFeatures = features.length > 0 ? features : defaultFeatures;
-
   return (
     <>
+      {/* HERO SECTION */}
       <section className="localHeroSection">
         <div className="localHeroGlow"></div>
 
         <div className="localHeroContent">
-          {/* <span className="localHeroBadge">✦ Our Services</span> */}
+          {/* Only show heading if it exists */}
+          {displayHeroData.hero_heading && (
+            <h1>{displayHeroData.hero_heading}</h1>
+          )}
 
-          <h1>{heading}</h1>
+          {/* Only show subheading if it exists */}
+          {displayHeroData.hero_subheading && (
+            <p>{displayHeroData.hero_subheading}</p>
+          )}
 
-          <p>{subheading}</p>
+          {/* Only show buttons if CTA text exists */}
+          {(displayHeroData.cta1_text || displayHeroData.cta2_text) && (
+            <div className="localHeroButtons">
+              {displayHeroData.cta1_text && (
+                <a href={displayHeroData.cta1_link || "/seo"} className="localPrimaryBtn">
+                  {displayHeroData.cta1_text}
+                </a>
+              )}
+              {displayHeroData.cta2_text && (
+                <a href={displayHeroData.cta2_link || "/geo"} className="localSecondaryBtn">
+                  {displayHeroData.cta2_text}
+                </a>
+              )}
+              <a href="/portfolio" className="localSecondaryBtn">
+                Portfolio
+              </a>
+            </div>
+          )}
 
-          <div className="localHeroButtons">
-            <a href={cta1Link} className="localPrimaryBtn">
-              {cta1Text}
-            </a>
-            <a href={cta2Link} className="localSecondaryBtn">
-              {cta2Text}
-            </a>
-            <a href="/portfolio" className="localSecondaryBtn">
-              Portfolio
-            </a>
-          </div>
-
+          {/* Stats section */}
           <div className="localStats">
             <div>
               <h3>
@@ -127,47 +159,58 @@ const LocalHero = ({ heroData, businessFeatures, serviceId }) => {
           </div>
         </div>
       </section>
-      <section className="localBusinessSection">
-      <div className="localBusinessContainer">
-        <div className="localVideoCard">
-          <div className="videoTopBar">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
 
-          <div className="videoBox">
-            <iframe
-              src={heroData?.business_video_url || "https://www.youtube.com/embed/YOUR_VIDEO_ID"}
-              title="SEO For Local Businesses"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
+      {/* BUSINESS SECTION */}
+      {(displayBusinessData.business_heading || displayBusinessData.business_subheading) && (
+        <section className="localBusinessSection">
+          <div className="localBusinessContainer">
+            {/* Video */}
+            {displayBusinessData.business_video_url && (
+              <div className="localVideoCard">
+                <div className="videoTopBar">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
 
-        <div className="localBusinessContent">
-          <span className="sectionMiniTag">Local Business Growth</span>
-
-          <h2>
-            {heroData?.business_heading || "SEO For Local Businesses That Want More Calls, Visits & Customers"}
-          </h2>
-
-          <p>
-            {heroData?.business_subheading || "Local SEO helps your business appear in Google Search and Google Maps when nearby customers are actively searching for your products or services. We optimize your online presence to improve visibility, trust, traffic and conversions."}
-          </p>
-
-          <div className="localBusinessGrid">
-            {displayFeatures.map((feature) => (
-              <div key={feature.id || feature.number} className="businessFeature">
-                <h4>{feature.number}</h4>
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
+                <div className="videoBox">
+                  <iframe
+                    src={displayBusinessData.business_video_url}
+                    title="SEO For Local Businesses"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* Content */}
+            <div className="localBusinessContent">
+              <span className="sectionMiniTag">Local Business Growth</span>
+
+              {displayBusinessData.business_heading && (
+                <h2>{displayBusinessData.business_heading}</h2>
+              )}
+
+              {displayBusinessData.business_subheading && (
+                <p>{displayBusinessData.business_subheading}</p>
+              )}
+
+              {/* Features Grid */}
+              {features.length > 0 && (
+                <div className="localBusinessGrid">
+                  {features.map((feature) => (
+                    <div key={feature.id || feature.number} className="businessFeature">
+                      {feature.number && <h4>{feature.number}</h4>}
+                      {feature.title && <h3>{feature.title}</h3>}
+                      {feature.description && <p>{feature.description}</p>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
+      )}
     </>
   );
 };

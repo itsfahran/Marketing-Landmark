@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Geo_Scope.css";
-
 import geoAuditImg from "../../assets/geo-audit.png";
 import geoOptimizationImg from "../../assets/geo-optimization.png";
 import geoVisibilityImg from "../../assets/geo-visibility.png";
+import { hasDbData } from "../../lib/dataHandler";
 
-const geoScopeData = [
+// Hardcoded defaults
+const DEFAULT_GEO_SCOPE_CARDS = [
   {
     number: "01",
     title: "Audit",
@@ -26,15 +27,20 @@ const geoScopeData = [
   },
 ];
 
+const DEFAULT_GEO_SCOPE = {
+  heading: 'Scope Of GEO',
+  description: 'Our GEO scope is designed to make your business more discoverable across modern AI-driven search platforms. From technical audits and content optimization to schema markup, local relevance, and brand visibility signals, every step helps search engines and AI tools better understand, trust, and reference your business. This process improves your chances of appearing in generative search results, featured answers, and high-intent local queries, helping your brand build stronger authority, better visibility, and long-term organic growth.',
+};
+
 const Geo_Scope = ({ scopeCards, heading, description }) => {
   const sectionRef = useRef(null);
   const previewShown = useRef(false);
   const [previewActive, setPreviewActive] = useState(false);
 
-  // Use database data or fallback to hardcoded
-  const displayData = scopeCards && scopeCards.length > 0 ? scopeCards : geoScopeData;
-  const displayHeading = heading || 'Scope Of GEO';
-  const displayDescription = description || 'Our GEO scope is designed to make your business more discoverable across modern AI-driven search platforms. From technical audits and content optimization to schema markup, local relevance, and brand visibility signals, every step helps search engines and AI tools better understand, trust, and reference your business. This process improves your chances of appearing in generative search results, featured answers, and high-intent local queries, helping your brand build stronger authority, better visibility, and long-term organic growth.';
+  // Database-first: Use database data if exists, otherwise use hardcoded defaults
+  const displayCards = hasDbData(scopeCards) ? scopeCards : DEFAULT_GEO_SCOPE_CARDS;
+  const displayHeading = heading || DEFAULT_GEO_SCOPE.heading;
+  const displayDescription = description || DEFAULT_GEO_SCOPE.description;
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -73,28 +79,39 @@ const Geo_Scope = ({ scopeCards, heading, description }) => {
     >
       <div className="geoScopeHeader">
         <span>✦ Scope</span>
-        <h2>{displayHeading}</h2>
 
-        <div className="geo-scope-text">
-          <p>{displayDescription}</p>
-        </div>
-      </div>
+        {displayHeading && <h2>{displayHeading}</h2>}
 
-      <div className="geoScopeCards">
-        {displayData.map((item) => (
-          <div className="geoScopeCard" key={item.id || item.number}>
-            {item.image && <img src={item.image} alt={item.title} className="geoScopeImg" />}
-
-            <div className="geoScopeOverlay"></div>
-
-            <div className="geoScopeContent">
-              <span className="geoScopeNumber">{item.number || item.id?.substring(0, 2)}</span>
-              <h3>{item.title}</h3>
-              <p>{item.text || item.description}</p>
-            </div>
+        {displayDescription && (
+          <div className="geo-scope-text">
+            <p>{displayDescription}</p>
           </div>
-        ))}
+        )}
       </div>
+
+      {displayCards && displayCards.length > 0 && (
+        <div className="geoScopeCards">
+          {displayCards.map((item) => (
+            <div className="geoScopeCard" key={item.id || item.number}>
+              {item.image && (
+                <img src={item.image} alt={item.title} className="geoScopeImg" />
+              )}
+
+              <div className="geoScopeOverlay"></div>
+
+              <div className="geoScopeContent">
+                {item.number && (
+                  <span className="geoScopeNumber">{item.number}</span>
+                )}
+                {item.title && <h3>{item.title}</h3>}
+                {(item.text || item.description) && (
+                  <p>{item.text || item.description}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

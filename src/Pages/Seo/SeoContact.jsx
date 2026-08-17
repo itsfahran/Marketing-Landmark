@@ -1,42 +1,58 @@
 import React from "react";
 import { FaArrowRight, FaWhatsapp } from "react-icons/fa";
 import "./SeoContact.css";
+import { hasDbData } from "../../lib/dataHandler";
 
-const SeoContact = () => {
+// Hardcoded defaults
+const DEFAULT_SEO_CONTACT = {
+  label: "Free SEO Audit",
+  heading: "Get Your Free SEO Audit & Quote For Your Website",
+  description: "Want to know why your website isn't ranking on Google?",
+  details: [
+    "Get a detailed Free SEO audit of your website and discover hidden opportunities to improve rankings, traffic, and conversions.",
+    "We'll first analyze your website's performance, on-page, off-page, technical issues, and keyword gaps to provide you with a clear action plan.",
+  ],
+  cta: "Fill out the form or contact us directly on WhatsApp to get a transparent quote with growth-focused recommendations.",
+};
+
+const SeoContact = ({ contactData }) => {
+  // Database-first: Use database data if exists, otherwise use hardcoded defaults
+  const displayData = hasDbData(contactData) ? contactData : DEFAULT_SEO_CONTACT;
+
   return (
     <section className="seo-contact-section">
       <div className="seo-contact-container">
         <div className="seo-contact-content">
-          <span className="seo-contact-label">Free SEO Audit</span>
+          {displayData.label && <span className="seo-contact-label">{displayData.label}</span>}
 
-          <h2>
-            Get Your Free SEO Audit & Quote
-            <br />
-            For Your Website
-          </h2>
+          {displayData.heading && (
+            <h2>
+              {displayData.heading}
+            </h2>
+          )}
 
-          <p>
-            Want to know why your website isn’t ranking on{" "}
-            <span className="google-text">Google?</span>
-          </p>
+          {displayData.description && (
+            <p>
+              {displayData.description}
+              <br />
+              <span className="google-text">Google?</span>
+            </p>
+          )}
 
-          <p>
-            Get a detailed Free SEO audit of your website and discover hidden
-            opportunities to improve rankings, traffic, and conversions.
-          </p>
+          {displayData.details && displayData.details.length > 0 && (
+            <>
+              {displayData.details.map((detail, index) => (
+                <p key={index}>{detail}</p>
+              ))}
+            </>
+          )}
 
-          <p>
-            We’ll first analyze your website’s performance, on-page, off-page,
-            technical issues, and keyword gaps to provide you with a clear
-            action plan.
-          </p>
-
-          <p className="seo-contact-bold">
-            Fill out the form or contact us directly on{" "}
-            <FaWhatsapp className="whatsapp-icon" />{" "}
-            <span>WhatsApp</span> to get a transparent quote with
-            growth-focused recommendations.
-          </p>
+          {displayData.cta && (
+            <p className="seo-contact-bold">
+              {displayData.cta}
+              <FaWhatsapp className="whatsapp-icon" />
+            </p>
+          )}
 
           <a href="#" className="seo-contact-btn">
             Let&apos;s Connect <FaArrowRight />

@@ -1,35 +1,56 @@
 import React from "react";
 import "./GeoContact.css";
+import { hasDbData } from "../../lib/dataHandler";
 
-const GeoContact = () => {
+// Hardcoded defaults
+const DEFAULT_GEO_CONTACT = {
+  tag: "Free GEO Audit",
+  heading: "Get Your Website Ready For AI Search Growth",
+  description: "Share your website details and get a professional GEO audit with clear recommendations to improve visibility on AI-driven search engines.",
+  points: [
+    "AI Search Readiness Check",
+    "Technical GEO Audit",
+    "Content Optimization Plan",
+    "Free Quote & Strategy",
+  ],
+  formHeading: "Request Free Audit",
+  formDescription: "Fill the form below and we'll contact you shortly.",
+};
+
+const GeoContact = ({ contactData }) => {
+  // Database-first: Use database data if exists, otherwise use hardcoded defaults
+  const displayData = hasDbData(contactData) ? contactData : DEFAULT_GEO_CONTACT;
+  const points = displayData.points || DEFAULT_GEO_CONTACT.points;
+
   return (
     <section className="geoContactSection">
       <div className="geoContactContainer">
         <div className="geoContactInfo">
-          <span className="geoContactTag">Free GEO Audit</span>
+          {displayData.tag && <span className="geoContactTag">{displayData.tag}</span>}
 
-          <h2>
-            Get Your Website Ready For <span>AI Search Growth</span>
-          </h2>
+          {displayData.heading && (
+            <h2>
+              Get Your Website Ready For <span>AI Search Growth</span>
+            </h2>
+          )}
 
-          <p>
-            Share your website details and get a professional GEO audit with
-            clear recommendations to improve visibility on AI-driven search
-            engines.
-          </p>
+          {displayData.description && (
+            <p>{displayData.description}</p>
+          )}
 
-          <div className="geoContactPoints">
-            <div>✓ AI Search Readiness Check</div>
-            <div>✓ Technical GEO Audit</div>
-            <div>✓ Content Optimization Plan</div>
-            <div>✓ Free Quote & Strategy</div>
-          </div>
+          {points && points.length > 0 && (
+            <div className="geoContactPoints">
+              {points.map((point, index) => (
+                <div key={index}>✓ {point}</div>
+              ))}
+            </div>
+          )}
         </div>
 
         <form className="geoContactForm">
           <div className="formHeader">
-            <h3>Request Free Audit</h3>
-            <p>Fill the form below and we’ll contact you shortly.</p>
+            {displayData.formHeading && <h3>{displayData.formHeading}</h3>}
+            {displayData.formDescription && <p>{displayData.formDescription}</p>}
           </div>
 
           <div className="formGrid">
@@ -72,7 +93,6 @@ const GeoContact = () => {
                 <option>$699</option>
                 <option>$999</option>
                 <option>$1000+</option>
-                
               </select>
             </div>
           </div>

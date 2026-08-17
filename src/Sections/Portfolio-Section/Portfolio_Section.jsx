@@ -2,6 +2,34 @@ import React, { useEffect, useState } from "react";
 import "./Portfolio_Section.css";
 import { FaHandPointRight } from "react-icons/fa";
 import { fetchHomePortfolioItems } from "../../lib/supabase-queries";
+import { hasDbData } from "../../lib/dataHandler";
+
+// Hardcoded defaults
+const DEFAULT_PORTFOLIO_ITEMS = [
+  {
+    id: '1',
+    title: "E-commerce SEO Project",
+    description: "Successfully optimized an e-commerce website, resulting in 250% increase in organic traffic and 40% increase in conversions within 6 months.",
+    image_url: "https://via.placeholder.com/400?text=Portfolio+1",
+  },
+  {
+    id: '2',
+    title: "Local Business Ranking",
+    description: "Helped a local service provider rank #1 for 15+ high-value keywords in their area, increasing leads by 300%.",
+    image_url: "https://via.placeholder.com/400?text=Portfolio+2",
+  },
+  {
+    id: '3',
+    title: "Startup Growth Strategy",
+    description: "Developed and executed a comprehensive SEO strategy for a tech startup, achieving top 3 rankings for competitive keywords.",
+    image_url: "https://via.placeholder.com/400?text=Portfolio+3",
+  },
+];
+
+const DEFAULT_PORTFOLIO_SECTION = {
+  badge: "Portfolio",
+  heading: "Featured Projects & Case Studies",
+};
 
 const PortfolioItems = ({ items, expandedCard, toggleDescription }) => (
   <>
@@ -10,23 +38,25 @@ const PortfolioItems = ({ items, expandedCard, toggleDescription }) => (
         className={`portfolio-card ${
           expandedCard === index ? "portfolio-card-expanded" : ""
         }`}
-        key={index}
+        key={item.id || index}
       >
-        <h3>{item.title}</h3>
+        {item.title && <h3>{item.title}</h3>}
 
         {item.image_url && (
           <div className="portfolio-image">
-            <img src={item.image_url} alt={item.title} />
+            <img src={item.image_url} alt={item.title || 'Portfolio item'} />
           </div>
         )}
 
-        <p
-          className={`portfolio-description ${
-            expandedCard === index ? "show-full-description" : ""
-          }`}
-        >
-          {item.description}
-        </p>
+        {item.description && (
+          <p
+            className={`portfolio-description ${
+              expandedCard === index ? "show-full-description" : ""
+            }`}
+          >
+            {item.description}
+          </p>
+        )}
 
         <button
           type="button"
@@ -52,9 +82,15 @@ const Portfolio_Section = () => {
   const loadProjects = async () => {
     try {
       const data = await fetchHomePortfolioItems();
-      setProjects(data);
+      // Database-first: if data exists, use it; otherwise use defaults
+      if (hasDbData(data)) {
+        setProjects(data);
+      } else {
+        setProjects(DEFAULT_PORTFOLIO_ITEMS);
+      }
     } catch (error) {
-      console.error("Error loading projects:", error);
+      console.error("Error loading projects, using defaults:", error);
+      setProjects(DEFAULT_PORTFOLIO_ITEMS);
     } finally {
       setLoading(false);
     }
@@ -64,38 +100,38 @@ const Portfolio_Section = () => {
     setExpandedCard(expandedCard === index ? null : index);
   };
 
-  if (loading) return <section className="portfolio-section"><h2>Loading...</h2></section>;
-
   return (
     <section className="portfolio-section" id="portfolio">
       <div className="portfolio-heading">
         <div className="portfolio-badge">
           <FaHandPointRight />
-          <span>Portfolio</span>
+          <span>{DEFAULT_PORTFOLIO_SECTION.badge}</span>
         </div>
 
-        <h2>Featured Projects & Case Studies</h2>
+        <h2>{DEFAULT_PORTFOLIO_SECTION.heading}</h2>
       </div>
 
-      <div className="portfolio-row-wrapper">
-        <div className="portfolio-cards">
-          <div className="portfolio-group">
-            <PortfolioItems
-              items={projects}
-              expandedCard={expandedCard}
-              toggleDescription={toggleDescription}
-            />
-          </div>
+      {projects && projects.length > 0 && (
+        <div className="portfolio-row-wrapper">
+          <div className="portfolio-cards">
+            <div className="portfolio-group">
+              <PortfolioItems
+                items={projects}
+                expandedCard={expandedCard}
+                toggleDescription={toggleDescription}
+              />
+            </div>
 
-          <div className="portfolio-group" aria-hidden="true">
-            <PortfolioItems
-              items={projects}
-              expandedCard={expandedCard}
-              toggleDescription={toggleDescription}
-            />
+            <div className="portfolio-group" aria-hidden="true">
+              <PortfolioItems
+                items={projects}
+                expandedCard={expandedCard}
+                toggleDescription={toggleDescription}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

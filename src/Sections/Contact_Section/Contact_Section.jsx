@@ -7,9 +7,18 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { fetchContactSection } from "../../lib/supabase-queries";
+import { hasDbData } from "../../lib/dataHandler";
+
+// Hardcoded defaults
+const DEFAULT_CONTACT_SECTION = {
+  heading: "Ready to Grow Your Online Presence?",
+  description: "Let's work together to improve your visibility, attract more customers, and achieve your business goals.",
+  phone: "923272462207",
+  email: "contact@example.com",
+};
 
 const Contact_Section = () => {
-  const [contact, setContact] = useState(null);
+  const [contact, setContact] = useState(DEFAULT_CONTACT_SECTION);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,15 +28,19 @@ const Contact_Section = () => {
   const loadContact = async () => {
     try {
       const data = await fetchContactSection();
-      setContact(data);
+      // Database-first: if data exists, use it; otherwise use defaults
+      if (hasDbData(data)) {
+        setContact(data);
+      } else {
+        setContact(DEFAULT_CONTACT_SECTION);
+      }
     } catch (error) {
-      console.error("Error loading contact:", error);
+      console.error("Error loading contact, using defaults:", error);
+      setContact(DEFAULT_CONTACT_SECTION);
     } finally {
       setLoading(false);
     }
   };
-
-  if (loading || !contact) return <section className="contact-section"><h2>Loading...</h2></section>;
 
   const extractDigits = (str) => {
     if (!str) return "";
@@ -41,18 +54,20 @@ const Contact_Section = () => {
     return digits.join("");
   };
 
-  const phoneDigits = extractDigits(contact.phone);
+  const phoneDigits = extractDigits(contact.phone || "");
   const whatsappUrl = `https://wa.me/${phoneDigits}`;
 
   return (
     <section className="contact-section" id="contact">
       <div className="contact-container">
         <div className="contact-left">
-          <h2>{contact.heading}</h2>
+          {contact.heading && <h2>{contact.heading}</h2>}
 
-          <p className="contact-desc">
-            {contact.description}
-          </p>
+          {contact.description && (
+            <p className="contact-desc">
+              {contact.description}
+            </p>
+          )}
 
           <p className="whatsapp-text">
             Fill out the form or contact us directly on{" "}

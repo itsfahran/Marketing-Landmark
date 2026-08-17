@@ -3,12 +3,21 @@ import "./About_Section.css";
 import { FaHandPointRight } from "react-icons/fa";
 import aboutImg from "../../assets/hero.png";
 import { fetchAbout } from "../../lib/supabase-queries";
+import { hasDbData } from "../../lib/dataHandler";
+
+// Hardcoded defaults
+const DEFAULT_ABOUT = {
+  description: "Hi, I'm Farhan Ali, an SEO professional dedicated to helping businesses improve their online visibility and reach their target audience. With years of experience in search engine optimization, local SEO, and digital marketing, I've helped numerous businesses achieve their goals through strategic, result-driven SEO solutions. My mission is to empower businesses with the visibility they deserve.",
+  satisfaction_rate: 95,
+  total_projects: 150,
+  years_experience: 5,
+};
 
 const About_Section = () => {
   const sectionRef = useRef(null);
   const hasCounterStarted = useRef(false);
 
-  const [about, setAbout] = useState(null);
+  const [about, setAbout] = useState(DEFAULT_ABOUT);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [projects, setProjects] = useState(0);
@@ -21,9 +30,15 @@ const About_Section = () => {
   const loadAbout = async () => {
     try {
       const data = await fetchAbout();
-      setAbout(data);
+      // Database-first: if data exists, use it; otherwise use defaults
+      if (hasDbData(data)) {
+        setAbout(data);
+      } else {
+        setAbout(DEFAULT_ABOUT);
+      }
     } catch (error) {
-      console.error("Error loading about:", error);
+      console.error("Error loading about, using defaults:", error);
+      setAbout(DEFAULT_ABOUT);
     } finally {
       setLoading(false);
     }
@@ -53,9 +68,9 @@ const About_Section = () => {
     };
 
     const startAllCounters = () => {
-      startCounter(about.satisfaction_rate, setRating);
-      startCounter(about.total_projects, setProjects);
-      startCounter(about.years_experience, setIndustries);
+      startCounter(about.satisfaction_rate || 0, setRating);
+      startCounter(about.total_projects || 0, setProjects);
+      startCounter(about.years_experience || 0, setIndustries);
     };
 
     const observer = new IntersectionObserver(
@@ -78,8 +93,6 @@ const About_Section = () => {
       }
     };
   }, [about, loading]);
-
-  if (loading || !about) return <section className="about-sec-section"><h2>Loading...</h2></section>;
 
   return (
     <section className="about-sec-section" id="about" ref={sectionRef}>
@@ -116,7 +129,7 @@ const About_Section = () => {
 
           <h4>Welcome Message</h4>
 
-          <p>{about.description}</p>
+          {about.description && <p>{about.description}</p>}
 
           <div className="about-sec-stats">
             <div className="about-sec-stat-box">

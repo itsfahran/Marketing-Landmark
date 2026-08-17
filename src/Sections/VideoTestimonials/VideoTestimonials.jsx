@@ -1,8 +1,10 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import VideoTestimonialsComponent from '../../Components/Extracted/VideoTestimonials';
 import { fetchHomeVideoTestimonials, fetchHomeVideoTestimonialsWithMeta } from '../../lib/supabase-queries';
+import { hasDbData } from '../../lib/dataHandler';
 
-const defaultVideoTestimonials = {
+// Hardcoded defaults
+const DEFAULT_VIDEO_TESTIMONIALS = {
   heading: 'Client Video Testimonials',
   description: 'Watch what our satisfied clients have to say about working with us',
   items: [
@@ -45,7 +47,7 @@ const defaultVideoTestimonials = {
 };
 
 const VideoTestimonials = () => {
-  const [data, setData] = useState(defaultVideoTestimonials);
+  const [data, setData] = useState(DEFAULT_VIDEO_TESTIMONIALS);
 
   useEffect(() => {
     loadVideoTestimonials();
@@ -58,15 +60,19 @@ const VideoTestimonials = () => {
         fetchHomeVideoTestimonials(),
       ]);
 
-      if (items && items.length > 0) {
+      // Database-first: if items exist, use them with meta (or defaults); otherwise use all defaults
+      if (hasDbData(items)) {
         setData({
-          heading: meta?.heading || defaultVideoTestimonials.heading,
-          description: meta?.description || defaultVideoTestimonials.description,
+          heading: meta?.heading || DEFAULT_VIDEO_TESTIMONIALS.heading,
+          description: meta?.description || DEFAULT_VIDEO_TESTIMONIALS.description,
           items: items,
         });
+      } else {
+        setData(DEFAULT_VIDEO_TESTIMONIALS);
       }
     } catch (error) {
-      console.error('Error loading video testimonials:', error);
+      console.error('Error loading video testimonials, using defaults:', error);
+      setData(DEFAULT_VIDEO_TESTIMONIALS);
     }
   };
 

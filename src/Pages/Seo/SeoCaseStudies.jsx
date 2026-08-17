@@ -1,12 +1,14 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
 import "./SeoCaseStudies.css";
+import { hasDbData } from "../../lib/dataHandler";
 
 import project1 from "../../assets/project1.png";
 import project2 from "../../assets/project2.png";
 import project3 from "../../assets/project3.png";
 
-const caseStudies = [
+// Hardcoded defaults
+const DEFAULT_CASE_STUDIES = [
   {
     title: "New E-Commerce Store 3-Month SEO Growth",
     image: project1,
@@ -41,41 +43,56 @@ const caseStudies = [
   },
 ];
 
-// Duplicate cards for seamless infinite scrolling
-const sliderCards = [...caseStudies, ...caseStudies];
+const DEFAULT_CASE_STUDIES_SECTION = {
+  badge: "Case Studies",
+  heading: "Our SEO Case Studies",
+};
 
-const SeoCaseStudies = () => {
+const SeoCaseStudies = ({ caseStudies, heading }) => {
+  // Database-first: Use database data if exists, otherwise use hardcoded defaults
+  const displayCaseStudies = hasDbData(caseStudies) ? caseStudies : DEFAULT_CASE_STUDIES;
+  const displayHeading = heading || DEFAULT_CASE_STUDIES_SECTION.heading;
+
+  // Duplicate cards for seamless infinite scrolling
+  const sliderCards = displayCaseStudies && displayCaseStudies.length > 0
+    ? [...displayCaseStudies, ...displayCaseStudies]
+    : [];
+
   return (
     <section className="seo-case-section">
       <div className="seo-case-container">
         <div className="seo-case-heading">
-          <span>Case Studies</span>
-          <h2>Our SEO Case Studies</h2>
+          <span>{DEFAULT_CASE_STUDIES_SECTION.badge}</span>
+          {displayHeading && <h2>{displayHeading}</h2>}
         </div>
 
-        <div className="seo-case-slider">
-          <div className="seo-case-track">
-            {sliderCards.map((item, index) => (
-              <div className="seo-case-card" key={index}>
-                <div className="seo-case-top-line"></div>
+        {sliderCards && sliderCards.length > 0 && (
+          <div className="seo-case-slider">
+            <div className="seo-case-track">
+              {sliderCards.map((item, index) => (
+                <div className="seo-case-card" key={index}>
+                  <div className="seo-case-top-line"></div>
 
-                <h3>{item.title}</h3>
+                  {item.title && <h3>{item.title}</h3>}
 
-                <div className="seo-case-image">
-                  <img src={item.image} alt={item.title} />
+                  {item.image && (
+                    <div className="seo-case-image">
+                      <img src={item.image} alt={item.title || 'Case study'} />
+                    </div>
+                  )}
+
+                  <div className="seo-case-content">
+                    {item.desc && <p>{item.desc}</p>}
+
+                    <a href="#" className="seo-case-btn">
+                      See Results <FaArrowRight />
+                    </a>
+                  </div>
                 </div>
-
-                <div className="seo-case-content">
-                  <p>{item.desc}</p>
-
-                  <a href="#" className="seo-case-btn">
-                    See Results <FaArrowRight />
-                  </a>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

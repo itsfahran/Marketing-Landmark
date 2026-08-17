@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import "./SeoFaqs.css";
+import { hasDbData } from "../../lib/dataHandler";
 
-const faqs = [
+// Hardcoded defaults
+const DEFAULT_FAQS = [
   {
     q: "How SEO Works?",
-    a: "SEO works by optimizing your website’s content, structure, and authority to rank higher on Google. As a professional SEO expert, I improve on-page, off-page, and technical factors so search engines trust your website and show it to the right audience. Proper SEO services in Pakistan help increase organic traffic, leads, and sales over time.",
+    a: "SEO works by optimizing your website's content, structure, and authority to rank higher on Google. As a professional SEO expert, I improve on-page, off-page, and technical factors so search engines trust your website and show it to the right audience. Proper SEO services in Pakistan help increase organic traffic, leads, and sales over time.",
   },
   {
     q: "How Much To Pay For SEO Services?",
-    a: "The cost of SEO services depends on your industry, competition level, target keywords, and business goals. In Pakistan, professional SEO services typically range from 59,999 to 149,999, depending on the scope of work and selected package. For the exact cost and a customized proposal, just WhatsApp here: +923272462207 — we’ll first review your website and guide you accordingly.",
+    a: "The cost of SEO services depends on your industry, competition level, target keywords, and business goals. In Pakistan, professional SEO services typically range from 59,999 to 149,999, depending on the scope of work and selected package. For the exact cost and a customized proposal, just WhatsApp here: +923272462207 — we'll first review your website and guide you accordingly.",
   },
   {
     q: "How SEO Helps Businesses In Pakistan?",
@@ -45,8 +47,17 @@ const faqs = [
   },
 ];
 
-const SeoFaqs = () => {
+const DEFAULT_FAQS_SECTION = {
+  badge: "FAQS",
+  heading: "Frequently Asked Questions",
+};
+
+const SeoFaqs = ({ faqs, heading }) => {
   const [openItems, setOpenItems] = useState([]);
+
+  // Database-first: Use database data if exists, otherwise use hardcoded defaults
+  const displayFaqs = hasDbData(faqs) ? faqs : DEFAULT_FAQS;
+  const displayHeading = heading || DEFAULT_FAQS_SECTION.heading;
 
   const toggleFaq = (index) => {
     setOpenItems((prev) =>
@@ -56,8 +67,8 @@ const SeoFaqs = () => {
     );
   };
 
-  const leftFaqs = faqs.filter((_, index) => index % 2 === 0);
-  const rightFaqs = faqs.filter((_, index) => index % 2 !== 0);
+  const leftFaqs = displayFaqs.filter((_, index) => index % 2 === 0);
+  const rightFaqs = displayFaqs.filter((_, index) => index % 2 !== 0);
 
   const renderFaq = (item, realIndex) => {
     const isOpen = openItems.includes(realIndex);
@@ -65,13 +76,13 @@ const SeoFaqs = () => {
     return (
       <div className={`seo-faq-item ${isOpen ? "active" : ""}`} key={realIndex}>
         <button className="seo-faq-question" onClick={() => toggleFaq(realIndex)}>
-          <span>{item.q}</span>
+          <span>{item.q || item.question}</span>
           {isOpen ? <FaMinus /> : <FaPlus />}
         </button>
 
         <div className="seo-faq-answer">
           <div className="seo-faq-answer-inner">
-            <p>{item.a}</p>
+            <p>{item.a || item.answer}</p>
           </div>
         </div>
       </div>
@@ -82,19 +93,21 @@ const SeoFaqs = () => {
     <section className="seo-faq-section">
       <div className="seo-faq-container">
         <div className="seo-faq-heading">
-          <span>FAQS</span>
-          <h2>Frequently Asked Questions</h2>
+          <span>{DEFAULT_FAQS_SECTION.badge}</span>
+          {displayHeading && <h2>{displayHeading}</h2>}
         </div>
 
-        <div className="seo-faq-columns">
-          <div className="seo-faq-column">
-            {leftFaqs.map((item, i) => renderFaq(item, i * 2))}
-          </div>
+        {displayFaqs && displayFaqs.length > 0 && (
+          <div className="seo-faq-columns">
+            <div className="seo-faq-column">
+              {leftFaqs.map((item, i) => renderFaq(item, i * 2))}
+            </div>
 
-          <div className="seo-faq-column">
-            {rightFaqs.map((item, i) => renderFaq(item, i * 2 + 1))}
+            <div className="seo-faq-column">
+              {rightFaqs.map((item, i) => renderFaq(item, i * 2 + 1))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

@@ -1,7 +1,9 @@
 import React from "react";
 import "./LocalPricing.css";
+import { hasDbData } from "../../lib/dataHandler";
 
-const pricingData = [
+// Hardcoded defaults
+const DEFAULT_LOCAL_PLANS = [
   {
     tag: "Starter",
     title: "Basic",
@@ -62,67 +64,93 @@ const pricingData = [
   },
 ];
 
+const DEFAULT_LOCAL_PRICING = {
+  heading: 'Local SEO Packages In Pakistan',
+  description: 'Choose the right package to improve your Google Maps visibility, business profile ranking and local customer reach.',
+};
+
 const LocalPricing = ({ pricing, heading, description }) => {
-  const displayPricing = pricing && pricing.length > 0 ? pricing : pricingData;
-  const displayHeading = heading || 'Local SEO Packages In Pakistan';
-  const displayDescription = description || 'Choose the right package to improve your Google Maps visibility, business profile ranking and local customer reach.';
+  // Database-first: Use database pricing if exists, otherwise use hardcoded defaults
+  const displayPricing = hasDbData(pricing) ? pricing : DEFAULT_LOCAL_PLANS;
+  const displayHeading = heading || DEFAULT_LOCAL_PRICING.heading;
+  const displayDescription = description || DEFAULT_LOCAL_PRICING.description;
 
   return (
     <section className="localPricingSection">
       <div className="localPricingContainer">
         <div className="localPricingHeader">
           <span>✦ Pricing</span>
-          <h2>{displayHeading}</h2>
-          <p>{displayDescription}</p>
+          {displayHeading && <h2>{displayHeading}</h2>}
+          {displayDescription && <p>{displayDescription}</p>}
         </div>
 
-        <div className="localPricingGrid">
-          {displayPricing.map((plan, index) => {
-            const planName = plan.name || plan.title || 'Untitled';
-            const planSubtitle = plan.subtitle || plan.tag || '';
-            const planUnit = plan.unit_label || plan.locations || '';
-            const isPopular = plan.is_popular || plan.popular || false;
-            const billingPeriod = plan.billing_period || 'Month';
+        {displayPricing && displayPricing.length > 0 && (
+          <div className="localPricingGrid">
+            {displayPricing.map((plan, index) => {
+              const planName = plan.name || plan.title || '';
+              const planSubtitle = plan.subtitle || plan.tag || '';
+              const planUnit = plan.unit_label || plan.locations || '';
+              const isPopular = plan.is_popular || plan.popular || false;
+              const billingPeriod = plan.billing_period || 'Month';
+              const price = plan.price || '';
 
-            return (
-            <div
-              className={`localPricingCard ${isPopular ? "popularPlan" : ""}`}
-              key={index}
-            >
-              {isPopular && <div className="popularBadge">Most Popular</div>}
+              // Get features - handle both database objects and hardcoded strings
+              const enabledFeatures = (plan.features || [])
+                .filter(f => typeof f === 'string' || !f.is_disabled)
+                .map(f => typeof f === 'string' ? f : f.feature_text);
 
-              <div className="pricingTop">
-                <span>{planSubtitle}</span>
-                <h3>{planName}</h3>
-                <p>{planUnit}</p>
-              </div>
+              const disabledFeatures = (plan.features || [])
+                .filter(f => typeof f === 'object' && f.is_disabled)
+                .map(f => f.feature_text)
+                .concat(plan.disabled || []);
 
-              <div className="pricingPrice">
-                <small>PKR</small>
-                <h4>{plan.price}</h4>
-                <span>/ {billingPeriod}</span>
-              </div>
+              return (
+                <div
+                  className={`localPricingCard ${isPopular ? "popularPlan" : ""}`}
+                  key={plan.id || index}
+                >
+                  {isPopular && <div className="popularBadge">Most Popular</div>}
 
-              <ul className="pricingFeatures">
-                {(plan.features || []).map((feature, i) => {
-                  const featureText = typeof feature === 'string' ? feature : feature.feature_text;
-                  const isDisabled = typeof feature === 'object' && feature.is_disabled;
-                  return (
-                    <li key={i} className={isDisabled ? 'disabled' : ''}>
-                      <span>{isDisabled ? '×' : '✓'}</span>
-                      {featureText}
-                    </li>
-                  );
-                })}
-              </ul>
+                  <div className="pricingTop">
+                    {planSubtitle && <span>{planSubtitle}</span>}
+                    {planName && <h3>{planName}</h3>}
+                    {planUnit && <p>{planUnit}</p>}
+                  </div>
 
-              <a href="#" className="pricingBtn">
-                Order Now
-              </a>
-            </div>
-            );
-          })}
-        </div>
+                  {price && (
+                    <div className="pricingPrice">
+                      <small>PKR</small>
+                      <h4>{price}</h4>
+                      <span>/ {billingPeriod}</span>
+                    </div>
+                  )}
+
+                  {(enabledFeatures.length > 0 || disabledFeatures.length > 0) && (
+                    <ul className="pricingFeatures">
+                      {enabledFeatures.map((feature, i) => (
+                        <li key={i}>
+                          <span>✓</span>
+                          {feature}
+                        </li>
+                      ))}
+
+                      {disabledFeatures.map((feature, i) => (
+                        <li key={i} className='disabled'>
+                          <span>×</span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <a href="#" className="pricingBtn">
+                    Order Now
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

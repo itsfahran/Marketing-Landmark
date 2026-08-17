@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { MdAutoGraph } from "react-icons/md";
 import { fetchServices } from "../../lib/supabase-queries";
+import { hasDbData } from "../../lib/dataHandler";
 
 const iconMap = {
   FaSearch: <FaSearchengin />,
@@ -15,7 +16,8 @@ const iconMap = {
   MdAutoGraph: <MdAutoGraph />,
 };
 
-const defaultServices = [
+// Hardcoded defaults
+const DEFAULT_SERVICES = [
   {
     id: '1',
     icon_name: 'FaSearch',
@@ -36,8 +38,14 @@ const defaultServices = [
   },
 ];
 
+const DEFAULT_SERVICE_SECTION = {
+  badge: "What We Offer",
+  heading: "Our Services",
+};
+
 const Service = () => {
-  const [services, setServices] = useState(defaultServices);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadServices();
@@ -46,23 +54,30 @@ const Service = () => {
   const loadServices = async () => {
     try {
       const data = await fetchServices();
-      if (data && data.length > 0) {
+      // Database-first: if data exists, use it; otherwise use defaults
+      if (hasDbData(data)) {
         setServices(data);
+      } else {
+        setServices(DEFAULT_SERVICES);
       }
     } catch (error) {
-      console.error("Error loading services:", error);
+      console.error("Error loading services, using defaults:", error);
+      setServices(DEFAULT_SERVICES);
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <section className="service-section">
       <div className="service-header">
         <div>
           <div className="service-badge">
             <FaHandPointRight />
-            <span>What We Offer</span>
+            <span>{DEFAULT_SERVICE_SECTION.badge}</span>
           </div>
 
-          <h2>Our Services</h2>
+          <h2>{DEFAULT_SERVICE_SECTION.heading}</h2>
         </div>
 
         <a href="/services" className="view-all-btn">
@@ -70,23 +85,27 @@ const Service = () => {
         </a>
       </div>
 
-      <div className="service-cards">
-        {services.map((service) => (
-          <div className="service-card" key={service.id}>
-            <div className="service-icon">{iconMap[service.icon_name] || <FaSearchengin />}</div>
+      {services && services.length > 0 && (
+        <div className="service-cards">
+          {services.map((service) => (
+            <div className="service-card" key={service.id || service.name}>
+              {service.icon_name && (
+                <div className="service-icon">
+                  {iconMap[service.icon_name] || <FaSearchengin />}
+                </div>
+              )}
 
-            <h3>{service.name}</h3>
+              {service.name && <h3>{service.name}</h3>}
 
-            <p>{service.description}</p>
+              {service.description && <p>{service.description}</p>}
 
-            <a href="#" className="service-btn">
-              Learn More <FaArrowRight />
-            </a>
-          </div>
-        ))}
-      </div>
-
-      
+              <a href="#" className="service-btn">
+                Learn More <FaArrowRight />
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

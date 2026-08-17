@@ -2,8 +2,45 @@ import React, { useEffect, useState } from "react";
 import "./Testimonials.css";
 import { FaHandPointRight, FaStar } from "react-icons/fa";
 import { fetchHomeTestimonials } from "../../lib/supabase-queries";
+import { hasDbData } from "../../lib/dataHandler";
 
 const READ_MORE_LIMIT = 135;
+
+// Hardcoded defaults
+const DEFAULT_TESTIMONIALS = [
+  {
+    id: '1',
+    client_name: "John Smith",
+    client_role: "Business Owner",
+    client_avatar_url: "https://via.placeholder.com/48?text=JS",
+    rating: 5,
+    review_text: "Excellent SEO services! My website traffic increased by 300% within 6 months. Highly recommended!",
+    source_platform: "google",
+  },
+  {
+    id: '2',
+    client_name: "Sarah Johnson",
+    client_role: "Marketing Manager",
+    client_avatar_url: "https://via.placeholder.com/48?text=SJ",
+    rating: 5,
+    review_text: "Professional and transparent approach to SEO. The team explained everything clearly and delivered great results.",
+    source_platform: "upwork",
+  },
+  {
+    id: '3',
+    client_name: "Mike Wilson",
+    client_role: "E-commerce Manager",
+    client_avatar_url: "https://via.placeholder.com/48?text=MW",
+    rating: 5,
+    review_text: "Outstanding local SEO optimization. We now rank #1 for our target keywords in our area.",
+    source_platform: "fiverr",
+  },
+];
+
+const DEFAULT_TESTIMONIALS_SECTION = {
+  badge: "Testimonials",
+  heading: "What Our Client Say About Us",
+};
 
 // Platform icons/badges
 const PLATFORM_ICONS = {
@@ -48,10 +85,16 @@ const Testimonials = () => {
 
       const data = await Promise.race([fetchHomeTestimonials(), timeoutPromise]);
       console.log("Testimonials fetched successfully:", data);
-      setTestimonials(data || []);
+
+      // Database-first: if data exists, use it; otherwise use defaults
+      if (hasDbData(data)) {
+        setTestimonials(data);
+      } else {
+        setTestimonials(DEFAULT_TESTIMONIALS);
+      }
     } catch (error) {
-      console.error("Error loading testimonials:", error);
-      setTestimonials([]);
+      console.error("Error loading testimonials, using defaults:", error);
+      setTestimonials(DEFAULT_TESTIMONIALS);
     } finally {
       console.log("Setting loading to false");
       setLoading(false);
@@ -144,8 +187,6 @@ const Testimonials = () => {
     return Object.entries(platformMap);
   };
 
-  if (loading) return <section className="testimonials-section"><h2>Loading...</h2></section>;
-
   const platformRows = getPlatformRows();
 
   return (
@@ -153,65 +194,67 @@ const Testimonials = () => {
       <div className="testimonials-heading">
         <div className="testimonials-badge">
           <FaHandPointRight />
-          <span>Testimonials</span>
+          <span>{DEFAULT_TESTIMONIALS_SECTION.badge}</span>
         </div>
 
-        <h2>What Our Client Say About Us</h2>
+        <h2>{DEFAULT_TESTIMONIALS_SECTION.heading}</h2>
       </div>
 
-      <div className="testimonial-rows">
-        {platformRows.map(([platform, platformTestimonials], rowIndex) => {
-          const isLogoLeft = rowIndex % 2 === 0;
-          const platformIcon = getPlatformLogo(platform);
-          const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
-          // Check if any testimonial has a custom platform_icon_url
-          const customIconUrl = platformTestimonials.find(t => t.platform_icon_url)?.platform_icon_url;
+      {testimonials && testimonials.length > 0 && (
+        <div className="testimonial-rows">
+          {platformRows.map(([platform, platformTestimonials], rowIndex) => {
+            const isLogoLeft = rowIndex % 2 === 0;
+            const platformIcon = getPlatformLogo(platform);
+            const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+            // Check if any testimonial has a custom platform_icon_url
+            const customIconUrl = platformTestimonials.find(t => t.platform_icon_url)?.platform_icon_url;
 
-          return (
-            <div key={platform} className={`testimonial-row ${isLogoLeft ? 'logo-left' : 'logo-right'}`}>
-              {isLogoLeft && (
-                <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px', overflow: 'hidden' }}>
-                    {customIconUrl ? (
-                      <img src={customIconUrl} alt={platformName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      platformIcon
-                    )}
+            return (
+              <div key={platform} className={`testimonial-row ${isLogoLeft ? 'logo-left' : 'logo-right'}`}>
+                {isLogoLeft && (
+                  <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px', overflow: 'hidden' }}>
+                      {customIconUrl ? (
+                        <img src={customIconUrl} alt={platformName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        platformIcon
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="testimonial-slider-window">
+                  <div className="testimonial-track">
+                    <div className="testimonial-group">
+                      {platformTestimonials.map((testimonial, index) =>
+                        renderTestimonialCard(testimonial, `${platform}-${index}`)
+                      )}
+                    </div>
+
+                    <div className="testimonial-group" aria-hidden="true">
+                      {platformTestimonials.map((testimonial, index) =>
+                        renderTestimonialCard(testimonial, `${platform}-${index}`)
+                      )}
+                    </div>
                   </div>
                 </div>
-              )}
 
-              <div className="testimonial-slider-window">
-                <div className="testimonial-track">
-                  <div className="testimonial-group">
-                    {platformTestimonials.map((testimonial, index) =>
-                      renderTestimonialCard(testimonial, `${platform}-${index}`)
-                    )}
+                {!isLogoLeft && (
+                  <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px', overflow: 'hidden' }}>
+                      {customIconUrl ? (
+                        <img src={customIconUrl} alt={platformName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        platformIcon
+                      )}
+                    </div>
                   </div>
-
-                  <div className="testimonial-group" aria-hidden="true">
-                    {platformTestimonials.map((testimonial, index) =>
-                      renderTestimonialCard(testimonial, `${platform}-${index}`)
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
-
-              {!isLogoLeft && (
-                <div className="platform-logo" style={{ fontSize: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #252381', borderRadius: '12px', overflow: 'hidden' }}>
-                    {customIconUrl ? (
-                      <img src={customIconUrl} alt={platformName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      platformIcon
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 };

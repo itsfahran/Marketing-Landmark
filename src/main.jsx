@@ -37,7 +37,7 @@ import AdminHomeComponents from "./Pages/Admin/AdminHomeComponents.jsx";
 import AdminAboutPage from "./Pages/Admin/AdminAboutPage.jsx";
 import AdminPortfolioPage from "./Pages/Admin/AdminPortfolioPage.jsx";
 import AdminContactSubmissions from "./Pages/Admin/AdminContactSubmissions.jsx";
-import AdminBlogManager from "./Pages/Admin/AdminBlogManager.jsx";
+import BlogEditor from "./Pages/Admin/BlogEditor.jsx";
 import AdminPagesList from "./Pages/Admin/AdminPagesList.jsx";
 import AdminPageBuilder from "./Pages/Admin/AdminPageBuilder.jsx";
 import AdminHireManager from "./Pages/Admin/AdminHireManager.jsx";
@@ -64,6 +64,7 @@ const router = createBrowserRouter(
         <Route path="contact" element={<Contact />} />
         <Route path="page/:slug" element={<DynamicPageBuilder />} />
         <Route path="blog" element={<Blog />} />
+        <Route path="blog/:slug" element={<Blog />} />
       </Route>
 
       {/* Admin routes */}
@@ -73,7 +74,7 @@ const router = createBrowserRouter(
         <Route path="about-page" element={<AdminAboutPage />} />
         <Route path="portfolio-page" element={<AdminPortfolioPage />} />
         <Route path="contact-submissions" element={<AdminContactSubmissions />} />
-        <Route path="blog-manager" element={<AdminBlogManager />} />
+        <Route path="blog-manager" element={<BlogEditor />} />
         <Route path="hire-manager" element={<AdminHireManager />} />
         <Route path="case-studies-manager" element={<AdminCaseStudiesManager />} />
         <Route path="services-manager" element={<ServicesManager onClose={() => window.history.back()} />} />

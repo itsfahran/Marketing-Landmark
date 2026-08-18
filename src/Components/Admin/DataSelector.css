@@ -1,0 +1,119 @@
+.data-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selector-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.selector-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.selector-icon {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.selector-input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.selector-input:hover {
+  border-color: #bbb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.selector-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.selector-input:disabled {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.selector-chevron {
+  position: absolute;
+  right: 12px;
+  color: #666;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.selector-input:focus ~ .selector-chevron {
+  color: #667eea;
+}
+
+.selector-spinner {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667eea;
+  z-index: 1;
+}
+
+.selector-spinner .spinning {
+  animation: spin 1s linear infinite;
+}
+
+.selector-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom scrollbar for select options */
+.selector-input option {
+  padding: 8px;
+  background: white;
+  color: #333;
+}
+
+.selector-input option:checked {
+  background: #667eea;
+  color: white;
+}

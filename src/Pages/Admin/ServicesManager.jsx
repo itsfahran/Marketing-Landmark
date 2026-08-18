@@ -11,6 +11,10 @@ const ServicesManager = ({ onClose }) => {
   const [editingId, setEditingId] = useState(null);
   const [editItem, setEditItem] = useState({});
   const [draggedItem, setDraggedItem] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [allPages, setAllPages] = useState([]);
+  const [selectedPages, setSelectedPages] = useState([]);
+  const [loadingPages, setLoadingPages] = useState(false);
 
   useEffect(() => {
     loadServices();
@@ -31,6 +35,75 @@ const ServicesManager = ({ onClose }) => {
       alert('Error loading services');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadPages = async () => {
+    try {
+      setLoadingPages(true);
+      const { data, error } = await supabase
+        .from('pages')
+        .select('id, name, slug, parent_page_id')
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      setAllPages(data || []);
+      setSelectedPages([]);
+    } catch (err) {
+      console.error('Error loading pages:', err);
+      alert('Error loading pages');
+    } finally {
+      setLoadingPages(false);
+    }
+  };
+
+  const handleSelectService = async (service) => {
+    setSelectedService(service);
+    await loadPages();
+  };
+
+  const togglePageSelection = (pageId) => {
+    setSelectedPages(prev =>
+      prev.includes(pageId)
+        ? prev.filter(id => id !== pageId)
+        : [...prev, pageId]
+    );
+  };
+
+  const handleAssignPages = async () => {
+    if (!selectedService || selectedPages.length === 0) {
+      alert('Select at least one page');
+      return;
+    }
+
+    try {
+      console.log('Assigning pages to service:', selectedService.id);
+
+      // Update all selected pages to have this service as parent
+      const results = await Promise.all(
+        selectedPages.map(pageId => {
+          console.log('Updating page:', pageId);
+          return supabase
+            .from('pages')
+            .update({ parent_page_id: selectedService.id })
+            .eq('id', pageId);
+        })
+      );
+
+      // Check for errors
+      const hasError = results.some(result => result.error);
+      if (hasError) {
+        const error = results.find(r => r.error)?.error;
+        throw error || new Error('Update failed');
+      }
+
+      console.log('Pages assigned successfully!');
+      alert('Pages assigned successfully!');
+      setSelectedPages([]);
+      await loadPages();
+    } catch (err) {
+      console.error('Error assigning pages:', err);
+      alert('Error: ' + (err.message || 'Failed to assign pages'));
     }
   };
 
@@ -408,6 +481,21 @@ const ServicesManager = ({ onClose }) => {
                       🔗 Navbar
                     </button>
                     <button
+                      onClick={() => handleSelectService(service)}
+                      style={{
+                        padding: '8px 12px',
+                        backgroundColor: '#667eea',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                      }}
+                      title="Assign pages as sub-services"
+                    >
+                      📄 Pages
+                    </button>
+                    <button
                       onClick={() => {
                         setEditingId(service.id);
                         setEditItem(service);
@@ -445,6 +533,99 @@ const ServicesManager = ({ onClose }) => {
             </div>
           ))}
         </div>
+
+        {/* Pages Assignment Section */}
+        {selectedService && (
+          <div style={{
+            marginTop: '40px',
+            padding: '20px',
+            backgroundColor: 'var(--surface-alt)',
+            borderRadius: 'var(--radius-lg)',
+            border: '2px solid var(--primary)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3>📄 Assign Pages to: <strong>{selectedService.title}</strong></h3>
+              <button
+                onClick={() => setSelectedService(null)}
+                style={{
+                  padding: '8px 12px',
+                  backgroundColor: 'var(--border)',
+                  border: 'none',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                }}
+              >
+                <FaTimes /> Close
+              </button>
+            </div>
+
+            {loadingPages ? (
+              <p>Loading pages...</p>
+            ) : allPages.length === 0 ? (
+              <p>No pages available</p>
+            ) : (
+              <>
+                <div style={{
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                  marginBottom: '20px',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '15px',
+                }}>
+                  {allPages.map((page) => (
+                    <label
+                      key={page.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px',
+                        borderRadius: 'var(--radius-md)',
+                        backgroundColor: selectedPages.includes(page.id) ? 'var(--primary)' : 'transparent',
+                        color: selectedPages.includes(page.id) ? 'white' : 'inherit',
+                        cursor: 'pointer',
+                        marginBottom: '8px',
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedPages.includes(page.id)}
+                        onChange={() => togglePageSelection(page.id)}
+                        style={{ marginRight: '10px', cursor: 'pointer' }}
+                      />
+                      <div>
+                        <strong>{page.name || page.title}</strong>
+                        <p style={{ fontSize: '12px', opacity: 0.7, margin: '3px 0' }}>
+                          {page.slug}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={handleAssignPages}
+                    disabled={selectedPages.length === 0}
+                    style={{
+                      flex: 1,
+                      padding: '12px',
+                      backgroundColor: selectedPages.length === 0 ? 'var(--border)' : 'var(--primary)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: selectedPages.length === 0 ? 'not-allowed' : 'pointer',
+                      fontWeight: '600',
+                    }}
+                  >
+                    ✓ Assign {selectedPages.length} Page{selectedPages.length !== 1 ? 's' : ''} as Sub-Services
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         <div style={{ marginTop: '20px', textAlign: 'right' }}>
           <button

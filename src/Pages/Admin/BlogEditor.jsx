@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  FaArrowLeft, FaPlus, FaTrash, FaEye, FaCheck, FaAlertCircle,
-  FaFileImage, FaBold, FaItalic, FaUnderline, FaLink, FaHeading2,
-  FaHeading3, FaList, FaListOl, FaQuoteLeft, FaCode, FaUndo,
+  FaArrowLeft, FaPlus, FaTrash, FaEye, FaCheck, FaExclamationCircle,
+  FaFileImage, FaBold, FaItalic, FaUnderline, FaLink,
+  FaList, FaListOl, FaQuoteLeft, FaCode, FaUndo,
   FaRedo, FaAlignLeft, FaAlignCenter, FaAlignRight, FaClock,
   FaUser, FaTag, FaFolderOpen, FaTimes, FaGripVertical, FaCheckCircle,
-  FaTimesCircle, FaExclamationTriangle, FaSearch, FaSave
+  FaTimesCircle, FaExclamationTriangle, FaSearch, FaSave, FaFolder
 } from 'react-icons/fa';
+import { useBlogEditor } from '../../hooks/useBlogEditor';
+import SEOScoreDisplay from '../../Components/Admin/SEOScoreDisplay';
+import ToastNotification from '../../Components/Admin/ToastNotification';
+import DataSelector from '../../Components/Admin/DataSelector';
+import KeywordManager from '../../Components/Admin/KeywordManager';
+import ContentStats from '../../Components/Admin/ContentStats';
 import './BlogEditor.css';
 
 // ============================================================================
@@ -85,9 +91,9 @@ const BasicInformation = ({ data, onChange }) => {
             maxLength={100}
             required
           />
-          <span className="char-counter">{data.title.length}/100</span>
+          <span className="char-counter">{(data.title || '').length}/100</span>
         </div>
-        {data.title.length < 30 && data.title.length > 0 && (
+        {(data.title || '').length < 30 && (data.title || '').length > 0 && (
           <small className="warning">Title should be at least 30 characters</small>
         )}
       </div>
@@ -119,7 +125,7 @@ const BasicInformation = ({ data, onChange }) => {
             maxLength={160}
             rows={3}
           />
-          <span className="char-counter">{data.excerpt.length}/160</span>
+          <span className="char-counter">{(data.excerpt || '').length}/160</span>
         </div>
         <small className="helper-text">Displayed in search results and social sharing (120-160 characters recommended)</small>
       </div>
@@ -156,8 +162,7 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
   const handleImageSelection = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      onChange('featuredImage', e.target.result);
-      onChange('fileName', file.name);
+      onChange('featured_image_url', e.target.result);
     };
     reader.readAsDataURL(file);
   };
@@ -166,7 +171,7 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
     <section className="editor-section">
       <h2 className="section-title">Featured Image</h2>
 
-      {!imageData.featuredImage ? (
+      {!imageData.featured_image_url ? (
         <div
           ref={dropZoneRef}
           className={`drop-zone ${dragActive ? 'active' : ''}`}
@@ -198,14 +203,14 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
         </div>
       ) : (
         <div className="image-preview-section">
-          <img src={imageData.featuredImage} alt="Featured" className="featured-image-preview" />
+          <img src={imageData.featured_image_url} alt="Featured" className="featured-image-preview" />
 
           <div className="image-form-group">
             <label>Alt Text (Important for SEO & Accessibility) *</label>
             <input
               type="text"
-              value={imageData.altText}
-              onChange={(e) => onChange('altText', e.target.value)}
+              value={imageData.featured_image_alt_text}
+              onChange={(e) => onChange('featured_image_alt_text', e.target.value)}
               placeholder="Red Pakistani bridal dress with traditional embroidery"
               maxLength={125}
             />
@@ -218,8 +223,8 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
             <label>Image Title</label>
             <input
               type="text"
-              value={imageData.imageTitle}
-              onChange={(e) => onChange('imageTitle', e.target.value)}
+              value={imageData.featured_image_title}
+              onChange={(e) => onChange('featured_image_title', e.target.value)}
               placeholder="Brief title of the image"
             />
           </div>
@@ -227,8 +232,8 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
           <div className="image-form-group">
             <label>Caption</label>
             <textarea
-              value={imageData.caption}
-              onChange={(e) => onChange('caption', e.target.value)}
+              value={imageData.featured_image_caption}
+              onChange={(e) => onChange('featured_image_caption', e.target.value)}
               placeholder="Optional caption displayed below image"
               rows={2}
             />
@@ -246,10 +251,10 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
               type="button"
               className="btn btn-danger"
               onClick={() => {
-                onChange('featuredImage', null);
-                onChange('altText', '');
-                onChange('imageTitle', '');
-                onChange('caption', '');
+                onChange('featured_image_url', '');
+                onChange('featured_image_alt_text', '');
+                onChange('featured_image_title', '');
+                onChange('featured_image_caption', '');
               }}
             >
               Remove Image
@@ -264,11 +269,21 @@ const FeaturedImageUploader = ({ imageData, onChange, onImageUpload }) => {
 const RichTextEditor = ({ content, onChange, onContentStatsChange }) => {
   const editorRef = useRef(null);
   const [selectedText, setSelectedText] = useState('');
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    // Initialize editor content once
+    if (editorRef.current && !isInitialized) {
+      editorRef.current.innerHTML = content || '';
+      setIsInitialized(true);
+    }
+  }, [isInitialized]);
 
   useEffect(() => {
     // Calculate stats
-    const words = content.split(/\s+/).filter(w => w.length > 0).length;
-    const chars = content.length;
+    const safeContent = content || '';
+    const words = safeContent.split(/\s+/).filter(w => w.length > 0).length;
+    const chars = safeContent.length;
     const readingTime = Math.ceil(words / 200);
     onContentStatsChange({ words, chars, readingTime });
   }, [content, onContentStatsChange]);
@@ -307,10 +322,10 @@ const RichTextEditor = ({ content, onChange, onContentStatsChange }) => {
 
         <div className="toolbar-group">
           <button title="H2" onClick={() => insertHeading(2)} className="toolbar-btn">
-            <FaHeading2 />
+            <span style={{ fontSize: '14px', fontWeight: 'bold' }}>H2</span>
           </button>
           <button title="H3" onClick={() => insertHeading(3)} className="toolbar-btn">
-            <FaHeading3 />
+            <span style={{ fontSize: '14px', fontWeight: 'bold' }}>H3</span>
           </button>
         </div>
 
@@ -354,23 +369,22 @@ const RichTextEditor = ({ content, onChange, onContentStatsChange }) => {
         suppressContentEditableWarning
         className="rich-text-editor"
         onInput={(e) => onChange(e.currentTarget.innerHTML)}
-        dangerouslySetInnerHTML={{ __html: content }}
       />
 
       <div className="editor-stats">
-        <span>💬 Words: {Math.round(content.split(/\s+/).filter(w => w).length)}</span>
-        <span>📝 Characters: {content.length}</span>
-        <span>⏱️ Reading time: {Math.ceil(content.split(/\s+/).filter(w => w).length / 200)} min</span>
+        <span>💬 Words: {Math.round((content || '').split(/\s+/).filter(w => w).length)}</span>
+        <span>📝 Characters: {(content || '').length}</span>
+        <span>⏱️ Reading time: {Math.ceil((content || '').split(/\s+/).filter(w => w).length / 200)} min</span>
       </div>
     </section>
   );
 };
 
-const CategorySelector = ({ selectedCategory, categories, onChange, onCreateCategory }) => {
+const CategorySelector = ({ selectedCategory, categories = [], onChange, onCreateCategory }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredCategories = categories.filter(cat =>
+  const filteredCategories = (categories || []).filter(cat =>
     cat.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -430,28 +444,28 @@ const CategorySelector = ({ selectedCategory, categories, onChange, onCreateCate
   );
 };
 
-const TagSelector = ({ selectedTags, allTags, onChange, onCreateTag }) => {
+const TagSelector = ({ selectedTags = [], allTags = [], onChange, onCreateTag }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredTags = allTags.filter(tag =>
-    !selectedTags.includes(tag) && tag.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTags = (allTags || []).filter(tag =>
+    !(selectedTags || []).includes(tag) && tag.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const addTag = (tag) => {
-    onChange([...selectedTags, tag]);
+    onChange([...(selectedTags || []), tag]);
     setSearchTerm('');
   };
 
   const removeTag = (tag) => {
-    onChange(selectedTags.filter(t => t !== tag));
+    onChange((selectedTags || []).filter(t => t !== tag));
   };
 
   return (
     <section className="sidebar-card">
       <h3>Tags</h3>
       <div className="tags-wrapper">
-        {selectedTags.map(tag => (
+        {(selectedTags || []).map(tag => (
           <span key={tag} className="tag-chip">
             {tag}
             <button onClick={() => removeTag(tag)} className="remove-btn">
@@ -471,7 +485,7 @@ const TagSelector = ({ selectedTags, allTags, onChange, onCreateTag }) => {
         />
         {searchOpen && (
           <div className="dropdown">
-            {filteredTags.map(tag => (
+            {(filteredTags || []).map(tag => (
               <button
                 key={tag}
                 className="dropdown-item"
@@ -480,7 +494,7 @@ const TagSelector = ({ selectedTags, allTags, onChange, onCreateTag }) => {
                 {tag}
               </button>
             ))}
-            {searchTerm && !filteredTags.includes(searchTerm) && (
+            {searchTerm && !(filteredTags || []).includes(searchTerm) && (
               <button
                 className="dropdown-item create-new"
                 onClick={() => {
@@ -498,16 +512,16 @@ const TagSelector = ({ selectedTags, allTags, onChange, onCreateTag }) => {
   );
 };
 
-const AuthorSelector = ({ selectedAuthor, authors, onChange }) => (
+const AuthorSelector = ({ selectedAuthor, authors = [], onChange }) => (
   <section className="sidebar-card">
     <h3>Author</h3>
     <select
-      value={selectedAuthor}
+      value={selectedAuthor || ''}
       onChange={(e) => onChange(e.target.value)}
       className="selector-select"
     >
       <option value="">Select Author</option>
-      {authors.map(author => (
+      {(authors || []).map(author => (
         <option key={author.id} value={author.id}>
           {author.name} - {author.role}
         </option>
@@ -516,18 +530,18 @@ const AuthorSelector = ({ selectedAuthor, authors, onChange }) => (
   </section>
 );
 
-const SEOSettings = ({ seoData, onChange, title, excerpt, slug }) => {
+const SEOSettings = ({ formData, onChange, title, excerpt, slug }) => {
   // Auto-generate meta title from blog title
   useEffect(() => {
-    if (!seoData.metaTitleManuallyEdited && title) {
-      onChange('metaTitle', `${title} | 2026 Guide`);
+    if (!formData.slugManuallyEdited && title && !formData.meta_title) {
+      onChange('meta_title', `${title} | Pakistan Guide`);
     }
   }, [title]);
 
   // Auto-generate meta description from excerpt
   useEffect(() => {
-    if (!seoData.metaDescriptionManuallyEdited && excerpt) {
-      onChange('metaDescription', excerpt.substring(0, 160));
+    if (excerpt && !formData.meta_description) {
+      onChange('meta_description', excerpt.substring(0, 160));
     }
   }, [excerpt]);
 
@@ -539,8 +553,8 @@ const SEOSettings = ({ seoData, onChange, title, excerpt, slug }) => {
         <label>Focus Keyword</label>
         <input
           type="text"
-          value={seoData.focusKeyword}
-          onChange={(e) => onChange('focusKeyword', e.target.value)}
+          value={formData.focus_keyword || ''}
+          onChange={(e) => onChange('focus_keyword', e.target.value)}
           placeholder="bridal dresses pakistan"
         />
         <small className="helper-text">The main keyword you want to rank for</small>
@@ -551,15 +565,12 @@ const SEOSettings = ({ seoData, onChange, title, excerpt, slug }) => {
         <div className="input-with-counter">
           <input
             type="text"
-            value={seoData.metaTitle}
-            onChange={(e) => {
-              onChange('metaTitle', e.target.value);
-              onChange('metaTitleManuallyEdited', true);
-            }}
+            value={formData.meta_title || ''}
+            onChange={(e) => onChange('meta_title', e.target.value)}
             maxLength={60}
           />
-          <span className={`char-counter ${seoData.metaTitle.length < 30 ? 'warning' : seoData.metaTitle.length > 60 ? 'error' : ''}`}>
-            {seoData.metaTitle.length}/60
+          <span className={`char-counter ${(formData.meta_title || '').length < 30 ? 'warning' : (formData.meta_title || '').length > 60 ? 'error' : ''}`}>
+            {(formData.meta_title || '').length}/60
           </span>
         </div>
         <small className="helper-text">30-60 characters recommended</small>
@@ -569,16 +580,13 @@ const SEOSettings = ({ seoData, onChange, title, excerpt, slug }) => {
         <label>Meta Description *</label>
         <div className="input-with-counter">
           <textarea
-            value={seoData.metaDescription}
-            onChange={(e) => {
-              onChange('metaDescription', e.target.value);
-              onChange('metaDescriptionManuallyEdited', true);
-            }}
+            value={formData.meta_description || ''}
+            onChange={(e) => onChange('meta_description', e.target.value)}
             maxLength={160}
             rows={3}
           />
-          <span className={`char-counter ${seoData.metaDescription.length < 120 ? 'warning' : seoData.metaDescription.length > 160 ? 'error' : ''}`}>
-            {seoData.metaDescription.length}/160
+          <span className={`char-counter ${(formData.meta_description || '').length < 120 ? 'warning' : (formData.meta_description || '').length > 160 ? 'error' : ''}`}>
+            {(formData.meta_description || '').length}/160
           </span>
         </div>
         <small className="helper-text">120-160 characters recommended (appears in search results)</small>
@@ -588,24 +596,24 @@ const SEOSettings = ({ seoData, onChange, title, excerpt, slug }) => {
         <label>Canonical URL</label>
         <input
           type="url"
-          value={seoData.canonicalUrl}
-          onChange={(e) => onChange('canonicalUrl', e.target.value)}
+          value={formData.canonical_url || ''}
+          onChange={(e) => onChange('canonical_url', e.target.value)}
           placeholder={`https://example.com/blog/${slug}`}
         />
         <small className="helper-text">Leave empty to auto-generate</small>
       </div>
 
       <div className="form-group">
-        <label>Robots</label>
+        <label>Robots Directive</label>
         <select
-          value={seoData.robots}
-          onChange={(e) => onChange('robots', e.target.value)}
+          value={formData.robots_directive || 'index,follow'}
+          onChange={(e) => onChange('robots_directive', e.target.value)}
           className="selector-select"
         >
-          <option value="index, follow">Index, Follow</option>
-          <option value="noindex, follow">No Index, Follow</option>
-          <option value="index, nofollow">Index, No Follow</option>
-          <option value="noindex, nofollow">No Index, No Follow</option>
+          <option value="index,follow">Index, Follow</option>
+          <option value="noindex,follow">No Index, Follow</option>
+          <option value="index,nofollow">Index, No Follow</option>
+          <option value="noindex,nofollow">No Index, No Follow</option>
         </select>
       </div>
     </section>
@@ -634,7 +642,7 @@ const GoogleSearchPreview = ({ metaTitle, metaDescription, slug }) => {
   );
 };
 
-const SocialSharing = ({ socialData, onChange }) => (
+const SocialSharing = ({ formData, onChange }) => (
   <section className="editor-section">
     <h2 className="section-title">📱 Social Sharing</h2>
 
@@ -642,8 +650,8 @@ const SocialSharing = ({ socialData, onChange }) => (
       <label>OG Title (Open Graph)</label>
       <input
         type="text"
-        value={socialData.ogTitle}
-        onChange={(e) => onChange('ogTitle', e.target.value)}
+        value={formData.og_title || ''}
+        onChange={(e) => onChange('og_title', e.target.value)}
         maxLength={60}
         placeholder="Best Bridal Dresses in Pakistan"
       />
@@ -653,8 +661,8 @@ const SocialSharing = ({ socialData, onChange }) => (
     <div className="form-group">
       <label>OG Description</label>
       <textarea
-        value={socialData.ogDescription}
-        onChange={(e) => onChange('ogDescription', e.target.value)}
+        value={formData.og_description || ''}
+        onChange={(e) => onChange('og_description', e.target.value)}
         maxLength={160}
         rows={3}
         placeholder="Explore latest bridal dress styles and designs..."
@@ -663,10 +671,21 @@ const SocialSharing = ({ socialData, onChange }) => (
     </div>
 
     <div className="form-group">
+      <label>OG Image URL</label>
+      <input
+        type="url"
+        value={formData.og_image_url || ''}
+        onChange={(e) => onChange('og_image_url', e.target.value)}
+        placeholder="https://example.com/image.jpg"
+      />
+      <small className="helper-text">Recommended: 1200 x 630 pixels</small>
+    </div>
+
+    <div className="form-group">
       <label>Twitter Card</label>
       <select
-        value={socialData.twitterCard}
-        onChange={(e) => onChange('twitterCard', e.target.value)}
+        value={formData.twitter_card || 'summary_large_image'}
+        onChange={(e) => onChange('twitter_card', e.target.value)}
         className="selector-select"
       >
         <option value="summary">Summary</option>
@@ -678,36 +697,38 @@ const SocialSharing = ({ socialData, onChange }) => (
       <h4>Social Media Preview</h4>
       <div className="preview-social">
         <div className="preview-header">Facebook & LinkedIn</div>
-        <div className="preview-og-title">{socialData.ogTitle || 'Your OG title'}</div>
-        <div className="preview-og-description">{socialData.ogDescription || 'Your description'}</div>
+        <div className="preview-og-title">{formData.og_title || 'Your OG title'}</div>
+        <div className="preview-og-description">{formData.og_description || 'Your description'}</div>
       </div>
     </div>
   </section>
 );
 
-const FAQBuilder = ({ faqs, onChange }) => {
+const FAQBuilder = ({ faqs = [], onChange }) => {
   const [expandedIndex, setExpandedIndex] = useState(null);
 
+  const safeFaqs = faqs || [];
+
   const addFAQ = () => {
-    onChange([...faqs, { question: '', answer: '' }]);
+    onChange([...safeFaqs, { question: '', answer: '' }]);
   };
 
   const updateFAQ = (index, field, value) => {
-    const updated = [...faqs];
+    const updated = [...safeFaqs];
     updated[index][field] = value;
     onChange(updated);
   };
 
   const removeFAQ = (index) => {
-    onChange(faqs.filter((_, i) => i !== index));
+    onChange(safeFaqs.filter((_, i) => i !== index));
   };
 
   const moveFAQ = (index, direction) => {
-    const updated = [...faqs];
+    const updated = [...safeFaqs];
     if (direction === 'up' && index > 0) {
       [updated[index], updated[index - 1]] = [updated[index - 1], updated[index]];
       setExpandedIndex(index - 1);
-    } else if (direction === 'down' && index < faqs.length - 1) {
+    } else if (direction === 'down' && index < safeFaqs.length - 1) {
       [updated[index], updated[index + 1]] = [updated[index + 1], updated[index]];
       setExpandedIndex(index + 1);
     }
@@ -723,7 +744,7 @@ const FAQBuilder = ({ faqs, onChange }) => {
         </button>
       </div>
 
-      {faqs.map((faq, index) => (
+      {(safeFaqs || []).map((faq, index) => (
         <div key={index} className="faq-item">
           <div
             className="faq-header"
@@ -764,7 +785,7 @@ const FAQBuilder = ({ faqs, onChange }) => {
                   type="button"
                   className="btn-icon"
                   onClick={() => moveFAQ(index, 'down')}
-                  disabled={index === faqs.length - 1}
+                  disabled={index === safeFaqs.length - 1}
                   title="Move down"
                 >
                   ▼
@@ -785,7 +806,8 @@ const FAQBuilder = ({ faqs, onChange }) => {
   );
 };
 
-const SEOAnalysis = ({ data, focusKeyword }) => {
+const SEOAnalysis = ({ data = {}, focusKeyword }) => {
+  const safeData = data || {};
   const checks = [
     {
       title: 'Focus keyword added',
@@ -794,27 +816,27 @@ const SEOAnalysis = ({ data, focusKeyword }) => {
     },
     {
       title: 'Keyword appears in title',
-      passed: focusKeyword && data.title.toLowerCase().includes(focusKeyword.toLowerCase()),
+      passed: focusKeyword && (safeData.title || '').toLowerCase().includes(focusKeyword.toLowerCase()),
       icon: '📄'
     },
     {
       title: 'Meta description is optimal length',
-      passed: data.metaDescription.length >= 120 && data.metaDescription.length <= 160,
+      passed: (safeData.meta_description || '').length >= 120 && (safeData.meta_description || '').length <= 160,
       icon: '📝'
     },
     {
       title: 'Featured image has alt text',
-      passed: !!data.altText,
+      passed: !!(safeData.featured_image_alt_text),
       icon: '🖼️'
     },
     {
       title: 'Content has heading structure',
-      passed: data.content.includes('<h2>') || data.content.includes('<h3>'),
+      passed: (safeData.content || '').includes('<h2>') || (safeData.content || '').includes('<h3>'),
       icon: '📊'
     },
     {
       title: 'Adequate content length',
-      passed: data.content.split(/\s+/).length >= 300,
+      passed: (safeData.content || '').split(/\s+/).length >= 300,
       icon: '📚'
     }
   ];
@@ -837,7 +859,7 @@ const SEOAnalysis = ({ data, focusKeyword }) => {
       </div>
 
       <div className="seo-checklist">
-        {checks.map((check, index) => (
+        {(checks || []).map((check, index) => (
           <div key={index} className={`check-item ${check.passed ? 'passed' : 'pending'}`}>
             <span className="check-icon">{check.passed ? '✓' : '○'}</span>
             <span className="check-title">{check.icon} {check.title}</span>
@@ -850,11 +872,11 @@ const SEOAnalysis = ({ data, focusKeyword }) => {
           <h4>💡 Tips to Improve SEO:</h4>
           <ul>
             {!focusKeyword && <li>Add a focus keyword to optimize for search</li>}
-            {focusKeyword && !data.title.toLowerCase().includes(focusKeyword.toLowerCase()) && <li>Include your focus keyword in the blog title</li>}
-            {!(data.metaDescription.length >= 120) && <li>Write a meta description of at least 120 characters</li>}
-            {!data.altText && <li>Add alt text to your featured image for accessibility and SEO</li>}
-            {!data.content.includes('<h2>') && <li>Use heading hierarchy (H2, H3) for better structure</li>}
-            {data.content.split(/\s+/).length < 300 && <li>Aim for at least 300 words of content</li>}
+            {focusKeyword && !(safeData.title || '').toLowerCase().includes(focusKeyword.toLowerCase()) && <li>Include your focus keyword in the blog title</li>}
+            {!((safeData.meta_description || '').length >= 120) && <li>Write a meta description of at least 120 characters</li>}
+            {!safeData.featured_image_alt_text && <li>Add alt text to your featured image for accessibility and SEO</li>}
+            {!(safeData.content || '').includes('<h2>') && <li>Use heading hierarchy (H2, H3) for better structure</li>}
+            {(safeData.content || '').split(/\s+/).length < 300 && <li>Aim for at least 300 words of content</li>}
           </ul>
         </div>
       )}
@@ -950,70 +972,39 @@ const PublishingCard = ({ publishData, onChange }) => (
 // ============================================================================
 
 export default function BlogEditor() {
-  const [formData, setFormData] = useState({
-    // Basic
-    title: '',
-    slug: '',
-    excerpt: '',
-    slugManuallyEdited: false,
-
-    // Featured Image
-    featuredImage: null,
-    fileName: '',
-    altText: '',
-    imageTitle: '',
-    caption: '',
-
-    // Content
-    content: '<p>Start writing your blog post...</p>',
-
-    // Meta
-    category: '',
-    tags: [],
-    author: '',
-
-    // SEO
-    focusKeyword: '',
-    metaTitle: '',
-    metaTitleManuallyEdited: false,
-    metaDescription: '',
-    metaDescriptionManuallyEdited: false,
-    canonicalUrl: '',
-    robots: 'index, follow',
-
-    // Social
-    ogTitle: '',
-    ogDescription: '',
-    twitterCard: 'summary_large_image',
-
-    // FAQ
-    faqs: [],
-
-    // Publishing
-    publishStatus: 'draft',
-    visibility: 'public',
-    publishDate: '',
-    publishTime: '',
-    timezone: 'UTC'
-  });
+  // Use Supabase blog editor hook
+  const {
+    formData,
+    categories,
+    authors,
+    faqs,
+    keywords,
+    loading,
+    error,
+    hasUnsavedChanges,
+    lastSavedTime,
+    updateFormData,
+    saveDraft,
+    publishPost,
+    addFAQ,
+    updateFAQ,
+    deleteFAQ,
+    addKeywords,
+    calculateSEOScore
+  } = useBlogEditor();
 
   const [contentStats, setContentStats] = useState({ words: 0, chars: 0, readingTime: 0 });
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [lastSavedTime, setLastSavedTime] = useState('Saved just now');
   const [showPreview, setShowPreview] = useState(false);
+  const [notification, setNotification] = useState(null);
 
-  // Mock data
-  const mockCategories = ['Fashion', 'Bridal', 'Formal Wear', 'Wedding', 'Silk', 'Trends'];
-  const mockTags = ['bridal-dresses', 'fashion-tips', 'pakistan-fashion', 'wedding-dresses', 'embroidery', 'trends-2026'];
-  const mockAuthors = [
-    { id: '1', name: 'Sarah Khan', role: 'Fashion Editor' },
-    { id: '2', name: 'Amira Ali', role: 'Content Writer' },
-    { id: '3', name: 'Admin', role: 'Administrator' }
-  ];
+  // Show notification
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setHasUnsavedChanges(true);
+    updateFormData(field, value);
   };
 
   const handleBack = () => {
@@ -1026,23 +1017,66 @@ export default function BlogEditor() {
     }
   };
 
-  const handleSaveDraft = () => {
-    setHasUnsavedChanges(false);
-    setLastSavedTime('Saved just now');
-    console.log('Draft saved:', formData);
+  const handleSaveDraft = async () => {
+    try {
+      await saveDraft();
+      showNotification('Draft saved successfully!', 'success');
+    } catch (err) {
+      showNotification('Failed to save draft: ' + err.message, 'error');
+    }
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!formData.title || !formData.content) {
-      alert('Please fill in required fields (title and content)');
+      showNotification('Please fill in required fields (title and content)', 'error');
       return;
     }
-    console.log('Published:', formData);
-    alert('Blog post published successfully!');
+    try {
+      await publishPost();
+      showNotification('Blog post published successfully!', 'success');
+      setTimeout(() => window.history.back(), 1500);
+    } catch (err) {
+      showNotification('Failed to publish: ' + err.message, 'error');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="blog-editor-container">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="blog-editor-container">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'red' }}>
+          <p>Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="blog-editor-container">
+      {notification && (
+        <div className={`notification notification-${notification.type}`} style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          padding: '15px 20px',
+          borderRadius: '4px',
+          backgroundColor: notification.type === 'success' ? '#4CAF50' : notification.type === 'error' ? '#f44336' : '#2196F3',
+          color: 'white',
+          zIndex: 9999,
+          boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+        }}>
+          {notification.message}
+        </div>
+      )}
       <PageHeader
         onBack={handleBack}
         onSaveDraft={handleSaveDraft}
@@ -1055,74 +1089,93 @@ export default function BlogEditor() {
       <div className="blog-editor-layout">
         <main className="blog-editor-main">
           <BasicInformation data={formData} onChange={handleChange} />
-          <FeaturedImageUploader imageData={formData} onChange={handleChange} />
+          <FeaturedImageUploader imageData={formData} onChange={updateFormData} />
           <RichTextEditor
             content={formData.content}
             onChange={(content) => handleChange('content', content)}
             onContentStatsChange={setContentStats}
           />
           <SEOSettings
-            seoData={{
-              focusKeyword: formData.focusKeyword,
-              metaTitle: formData.metaTitle,
-              metaTitleManuallyEdited: formData.metaTitleManuallyEdited,
-              metaDescription: formData.metaDescription,
-              metaDescriptionManuallyEdited: formData.metaDescriptionManuallyEdited,
-              canonicalUrl: formData.canonicalUrl,
-              robots: formData.robots
-            }}
+            formData={formData}
             onChange={handleChange}
             title={formData.title}
             excerpt={formData.excerpt}
             slug={formData.slug}
           />
           <GoogleSearchPreview
-            metaTitle={formData.metaTitle}
-            metaDescription={formData.metaDescription}
+            metaTitle={formData.meta_title}
+            metaDescription={formData.meta_description}
             slug={formData.slug}
           />
           <SocialSharing
-            socialData={{
-              ogTitle: formData.ogTitle,
-              ogDescription: formData.ogDescription,
-              twitterCard: formData.twitterCard
-            }}
+            formData={formData}
             onChange={handleChange}
           />
           <FAQBuilder
             faqs={formData.faqs}
             onChange={(faqs) => handleChange('faqs', faqs)}
           />
+          {/* SEO Score Display */}
+          <SEOScoreDisplay
+            score={formData.seo_score || 0}
+            data={formData}
+          />
+
+          {/* Content Statistics */}
+          <ContentStats
+            wordCount={formData.word_count || 0}
+            readingTime={formData.reading_time_minutes || 0}
+            viewCount={formData.view_count || 0}
+            status={formData.status}
+            publishedAt={formData.published_at}
+            lastUpdated={formData.updated_at}
+          />
+
+          {/* Legacy SEO Analysis */}
           <SEOAnalysis
             data={formData}
-            focusKeyword={formData.focusKeyword}
+            focusKeyword={formData.focus_keyword}
+            seoScore={formData.seo_score}
           />
         </main>
 
         <aside className="blog-editor-sidebar">
-          <CategorySelector
-            selectedCategory={formData.category}
-            categories={mockCategories}
-            onChange={(cat) => handleChange('category', cat)}
-            onCreateCategory={(newCat) => {
-              mockCategories.push(newCat);
-              handleChange('category', newCat);
-            }}
+          <DataSelector
+            label="Category"
+            value={formData.category_id}
+            onChange={(catId) => handleChange('category_id', catId)}
+            options={categories}
+            loading={loading}
+            placeholder="Select a category..."
+            icon={FaFolder}
+            hint="Choose a blog category"
           />
 
           <TagSelector
             selectedTags={formData.tags}
-            allTags={mockTags}
+            allTags={formData.tags || []}
             onChange={(tags) => handleChange('tags', tags)}
             onCreateTag={(newTag) => {
-              mockTags.push(newTag);
+              showNotification('Tag created successfully', 'success');
             }}
           />
 
-          <AuthorSelector
-            selectedAuthor={formData.author}
-            authors={mockAuthors}
-            onChange={(author) => handleChange('author', author)}
+          <KeywordManager
+            keywords={keywords}
+            onAdd={(keyword) => addKeywords([{keyword}])}
+            onDelete={(id) => deleteFAQ(id)}
+            onTogglePrimary={(id, isPrimary) => updateFAQ(id, {is_primary: isPrimary})}
+          />
+
+          <DataSelector
+            label="Author"
+            value={formData.author_id}
+            onChange={(authorId) => handleChange('author_id', authorId)}
+            options={authors}
+            loading={loading}
+            placeholder="Select an author..."
+            icon={FaUser}
+            hint="Choose blog author"
           />
 
           <PublishingCard
@@ -1142,9 +1195,24 @@ export default function BlogEditor() {
         </aside>
       </div>
 
-      {showPreview && (
+      {showPreview && formData && (
         <BlogPreview
-          data={formData}
+          data={{
+            title: formData.title || '',
+            excerpt: formData.excerpt || '',
+            featured_image_url: formData.featured_image_url || '',
+            featured_image_alt_text: formData.featured_image_alt_text || '',
+            content: formData.content || '',
+            meta_title: formData.meta_title || '',
+            meta_description: formData.meta_description || '',
+            og_title: formData.og_title || '',
+            og_description: formData.og_description || '',
+            word_count: formData.word_count || 0,
+            seo_score: formData.seo_score || 0,
+            faqs: formData.faqs || [],
+            category: categories?.find(c => c.id === formData.category_id)?.name,
+            author: authors?.find(a => a.id === formData.author_id)?.name
+          }}
           contentStats={contentStats}
           onClose={() => setShowPreview(false)}
         />
@@ -1185,7 +1253,7 @@ function BlogPreview({ data, contentStats, onClose }) {
 
           <div className="preview-body" dangerouslySetInnerHTML={{ __html: data.content }} />
 
-          {data.faqs.length > 0 && (
+          {data.faqs && data.faqs.length > 0 && (
             <section className="preview-faq">
               <h2>Frequently Asked Questions</h2>
               {data.faqs.map((faq, i) => (

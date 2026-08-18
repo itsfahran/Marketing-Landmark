@@ -5,7 +5,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaEdit, FaTrash, FaSearch, FaEye, FaCopy, FaChevronDown, FaChevronUp, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaSearch, FaEye, FaCopy, FaChevronDown, FaChevronUp, FaCheck, FaExclamationTriangle, FaFileAlt } from 'react-icons/fa';
+import { usePageEditor } from '../../hooks/usePageEditor';
+import SEOScoreDisplay from '../../Components/Admin/SEOScoreDisplay';
+import ToastNotification from '../../Components/Admin/ToastNotification';
+import ContentStats from '../../Components/Admin/ContentStats';
+import DataSelector from '../../Components/Admin/DataSelector';
 import {
   fetchAllPages,
   createPage,
@@ -75,9 +80,23 @@ const calculateSEOScore = (formData) => {
 };
 
 export default function AdminPages() {
-  const [pages, setPages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Use Supabase page editor hook
+  const {
+    formData,
+    seoMetadata,
+    allPages,
+    loading,
+    error,
+    hasUnsavedChanges,
+    updateFormData,
+    savePage,
+    publishPage,
+    deletePage: deletePageHook,
+    analyzeContent,
+    calculateSEOScore: calculateSEOScoreHook,
+    getPageOptions
+  } = usePageEditor();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showForm, setShowForm] = useState(false);
@@ -89,71 +108,19 @@ export default function AdminPages() {
     seoBasic: true,
     seoSocial: true,
     seoAdvanced: false,
+    visibility: true,
   });
-  const [seoScore, setSeoScore] = useState(0);
-  const [seoChecks, setSeoChecks] = useState({});
+  const [notification, setNotification] = useState(null);
 
-  const [formData, setFormData] = useState({
-    // Basic Information
-    title: '',
-    slug: '',
-    parent_id: null,
-    template_type: 'seo',
-    status: 'draft',
-    // SEO Basic
-    meta_title: '',
-    meta_description: '',
-    canonical_url: '',
-    index_setting: true,
-    follow_setting: true,
-    // SEO Social
-    og_title: '',
-    og_description: '',
-    og_image_url: '',
-    twitter_card: 'summary_large_image',
-    // SEO Keywords
-    primary_keyword: '',
-    secondary_keywords: '',
-    // SEO Structured Data
-    schema_type: '',
-    schema_config: '',
-    // SEO Advanced
-    robots_directive: 'index,follow',
-    custom_head_tags: '',
-    custom_json_ld: '',
-  });
-
-  useEffect(() => {
-    loadPages();
-  }, []);
-
-  useEffect(() => {
-    const { score, checks } = calculateSEOScore(formData);
-    setSeoScore(score);
-    setSeoChecks(checks);
-  }, [formData]);
-
-  const loadPages = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchAllPages();
-      setPages(data || []);
-    } catch (error) {
-      console.error('Error loading pages:', error);
-      setError('Database not connected yet. Set up Supabase migrations to continue.');
-      setPages([]);
-    } finally {
-      setLoading(false);
-    }
+  // Show notification
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    updateFormData(name, type === 'checkbox' ? checked : value);
   };
 
   const handleSubmit = async (e) => {
@@ -162,32 +129,33 @@ export default function AdminPages() {
 
     try {
       if (editingId) {
-        const updated = await updatePage(editingId, formData);
-        if (updated) {
-          setPages(pages.map((p) => (p.id === editingId ? updated : p)));
-          alert('Page updated successfully!');
-        }
+        await savePage();
+        showNotification('Page updated successfully!', 'success');
       } else {
-        const newPage = await createPage({
-          ...formData,
-          created_at: new Date().toISOString(),
-        });
-        if (newPage) {
-          setPages([...pages, newPage]);
-          alert('Page created successfully!');
-        }
+        await savePage();
+        showNotification('Page created successfully!', 'success');
       }
       resetForm();
     } catch (error) {
       console.error('Error saving page:', error);
-      alert('Error saving page. Check console for details.');
+      showNotification('Error saving page: ' + error.message, 'error');
     } finally {
       setSaving(false);
     }
   };
 
   const handleEdit = (page) => {
-    setFormData(page);
+    updateFormData('id', page.id);
+    updateFormData('title', page.title);
+    updateFormData('slug', page.slug);
+    updateFormData('template_type', page.template_type);
+    updateFormData('status', page.status);
+    updateFormData('meta_title', page.meta_title);
+    updateFormData('meta_description', page.meta_description);
+    updateFormData('canonical_url', page.canonical_url);
+    updateFormData('og_title', page.og_title);
+    updateFormData('og_description', page.og_description);
+    updateFormData('focus_keyword', page.focus_keyword);
     setEditingId(page.id);
     setShowForm(true);
     setActiveTab('basic');
@@ -196,46 +164,19 @@ export default function AdminPages() {
   const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this page?')) {
       try {
-        const success = await deletePage(id);
-        if (success) {
-          setPages(pages.filter((p) => p.id !== id));
-          alert('Page deleted successfully!');
-        }
+        await deletePageHook();
+        showNotification('Page deleted successfully!', 'success');
+        resetForm();
       } catch (error) {
         console.error('Error deleting page:', error);
-        alert('Error deleting page.');
+        showNotification('Error deleting page: ' + error.message, 'error');
       }
     }
   };
 
   const resetForm = () => {
-    setFormData({
-      title: '',
-      slug: '',
-      parent_id: null,
-      template_type: 'seo',
-      status: 'draft',
-      meta_title: '',
-      meta_description: '',
-      canonical_url: '',
-      index_setting: true,
-      follow_setting: true,
-      og_title: '',
-      og_description: '',
-      og_image_url: '',
-      twitter_card: 'summary_large_image',
-      primary_keyword: '',
-      secondary_keywords: '',
-      schema_type: '',
-      schema_config: '',
-      robots_directive: 'index,follow',
-      custom_head_tags: '',
-      custom_json_ld: '',
-    });
     setEditingId(null);
     setShowForm(false);
-    setSeoScore(0);
-    setSeoChecks({});
   };
 
   const toggleSection = (section) => {
@@ -245,10 +186,10 @@ export default function AdminPages() {
     }));
   };
 
-  const filteredPages = pages.filter((page) => {
+  const filteredPages = (allPages || []).filter((page) => {
     const matchesSearch =
-      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      page.slug.toLowerCase().includes(searchTerm.toLowerCase());
+      page.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.slug?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'all' || page.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -268,6 +209,21 @@ export default function AdminPages() {
 
   return (
     <div className="admin-pages">
+      {notification && (
+        <div className={`notification notification-${notification.type}`} style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          padding: '15px 20px',
+          borderRadius: '4px',
+          backgroundColor: notification.type === 'success' ? '#4CAF50' : notification.type === 'error' ? '#f44336' : '#2196F3',
+          color: 'white',
+          zIndex: 9999,
+          boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+        }}>
+          {notification.message}
+        </div>
+      )}
       <div className="pages-header">
         <h2 className="page-heading">Manage Pages</h2>
         <button className="btn btn-primary" onClick={() => setShowForm(true)} disabled={saving || !!error}>
@@ -456,6 +412,24 @@ export default function AdminPages() {
                 )}
               </div>
 
+              {/* SEO Score Display */}
+              <div className="form-section">
+                <SEOScoreDisplay
+                  score={formData.seo_score || 0}
+                  data={formData}
+                />
+              </div>
+
+              {/* Content Stats */}
+              <div className="form-section">
+                <ContentStats
+                  wordCount={formData.word_count || 0}
+                  readingTime={formData.reading_time_minutes || 0}
+                  viewCount={formData.view_count || 0}
+                  status={formData.status}
+                />
+              </div>
+
               {/* Content Section */}
               <div className="form-section">
                 <div className="section-header">
@@ -477,21 +451,36 @@ export default function AdminPages() {
 
                 {expandedSections.seoBasic && (
                   <div className="section-content">
+                    {/* Focus Keyword */}
                     <div className="form-group">
-                      <label>SEO Title <span className="char-count">{formData.meta_title.length}/60</span></label>
+                      <label>Focus Keyword</label>
+                      <input
+                        type="text"
+                        name="focus_keyword"
+                        value={formData.focus_keyword || ''}
+                        onChange={handleInputChange}
+                        placeholder="e.g., SEO services Pakistan"
+                      />
+                      <small>The main keyword you want to rank for (1-3 words)</small>
+                    </div>
+
+                    {/* SEO Title */}
+                    <div className="form-group">
+                      <label>SEO Title <span className="char-count">{(formData.meta_title || '').length}/60</span></label>
                       <input
                         type="text"
                         name="meta_title"
-                        value={formData.meta_title}
+                        value={formData.meta_title || ''}
                         onChange={handleInputChange}
                         placeholder="Enter SEO title (30-60 characters)"
                         maxLength={60}
                       />
-                      <small>Recommended: 30-60 characters</small>
+                      <small>Recommended: 30-60 characters. Include focus keyword if possible.</small>
                     </div>
 
+                    {/* Meta Description */}
                     <div className="form-group">
-                      <label>Meta Description <span className="char-count">{formData.meta_description.length}/160</span></label>
+                      <label>Meta Description <span className="char-count">{(formData.meta_description || '').length}/160</span></label>
                       <textarea
                         name="meta_description"
                         value={formData.meta_description}
@@ -599,12 +588,34 @@ export default function AdminPages() {
                     </div>
 
                     <div className="form-group">
+                      <label>OG Type</label>
+                      <select name="og_type" value={formData.og_type || 'website'} onChange={handleInputChange}>
+                        <option value="website">Website</option>
+                        <option value="article">Article</option>
+                        <option value="business.business">Business</option>
+                        <option value="product">Product</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
                       <label>Twitter Card Type</label>
-                      <select name="twitter_card" value={formData.twitter_card} onChange={handleInputChange}>
+                      <select name="twitter_card" value={formData.twitter_card || 'summary_large_image'} onChange={handleInputChange}>
                         <option value="summary">Summary</option>
                         <option value="summary_large_image">Summary with Large Image</option>
                         <option value="app">App</option>
                       </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Twitter Creator</label>
+                      <input
+                        type="text"
+                        name="twitter_creator"
+                        value={formData.twitter_creator || ''}
+                        onChange={handleInputChange}
+                        placeholder="@username (without @)"
+                      />
+                      <small>Twitter handle for creator attribution</small>
                     </div>
                   </div>
                 )}
@@ -695,6 +706,62 @@ export default function AdminPages() {
                         placeholder='Custom structured data (JSON-LD format)'
                         rows="4"
                       />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Page Visibility & Navigation */}
+              <div className="form-section">
+                <div className="section-header" onClick={() => toggleSection('visibility')}>
+                  <h4>👁️ Visibility & Navigation</h4>
+                  {expandedSections.visibility ? <FaChevronUp /> : <FaChevronDown />}
+                </div>
+
+                {expandedSections.visibility && (
+                  <div className="section-content">
+                    <div className="form-group">
+                      <label>Visibility</label>
+                      <select name="visibility" value={formData.visibility || 'public'} onChange={handleInputChange}>
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                      </select>
+                      <small>Control who can see this page</small>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group checkbox">
+                        <input
+                          type="checkbox"
+                          id="show_in_navbar"
+                          name="show_in_navbar"
+                          checked={formData.show_in_navbar || false}
+                          onChange={handleInputChange}
+                        />
+                        <label htmlFor="show_in_navbar">Show in Navigation Menu</label>
+                      </div>
+
+                      <div className="form-group checkbox">
+                        <input
+                          type="checkbox"
+                          id="show_in_footer"
+                          name="show_in_footer"
+                          checked={formData.show_in_footer || false}
+                          onChange={handleInputChange}
+                        />
+                        <label htmlFor="show_in_footer">Show in Footer</label>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Parent Page (For Sub-Pages)</label>
+                      <select name="parent_page_id" value={formData.parent_page_id || ''} onChange={handleInputChange}>
+                        <option value="">No Parent (Top Level)</option>
+                        {(allPages || []).filter(p => p.id !== formData.id).map((p) => (
+                          <option key={p.id} value={p.id}>{p.title}</option>
+                        ))}
+                      </select>
+                      <small>Create a page hierarchy for sub-pages</small>
                     </div>
                   </div>
                 )}

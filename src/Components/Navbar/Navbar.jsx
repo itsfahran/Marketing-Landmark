@@ -9,6 +9,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { fetchNavbarMenuItems, fetchNavbarServices } from "../../lib/supabase-queries";
+import { getSupabaseClient } from "../../lib/supabase";
 import profile from "../../assets/2.png";
 
 // Default hardcoded menu items as fallback
@@ -36,12 +37,17 @@ const Navbar = () => {
 
   const loadNavbarItems = async () => {
     try {
+      const supabase = getSupabaseClient();
       const [items, services] = await Promise.all([
         fetchNavbarMenuItems(),
         fetchNavbarServices(),
       ]);
 
       if (items && items.length > 0) {
+        // Get services item ID
+        const servicesItem = items.find(i => i.label.toLowerCase().includes('service'));
+        const servicesItemId = servicesItem?.id;
+
         // Convert services to navbar child items
         const serviceItems = (services || []).map((service, idx) => ({
           id: `service-${service.id}`,
@@ -51,15 +57,46 @@ const Navbar = () => {
           order_position: idx,
           is_active: service.is_active,
           open_in_new_tab: false,
-          parent_id: items.find(i => i.label.toLowerCase().includes('service'))?.id,
+          parent_id: servicesItemId,
         }));
 
-        // Merge items with service children
-        const servicesItem = items.find(i => i.label.toLowerCase().includes('service'));
-        if (servicesItem && serviceItems.length > 0) {
-          // Replace hardcoded service children with database services
+        // Fetch pages with parent_page_id set to service IDs
+        const pageItems = [];
+        const serviceIds = services?.map(s => s.id) || [];
+
+        if (serviceIds.length > 0) {
+          try {
+            const { data: pages } = await supabase
+              .from('pages')
+              .select('id, name, slug, parent_page_id')
+              .in('parent_page_id', serviceIds);
+
+            if (pages && pages.length > 0) {
+              pages.forEach((page, idx) => {
+                const parentService = services.find(s => s.id === page.parent_page_id);
+                if (parentService) {
+                  pageItems.push({
+                    id: `page-${page.id}`,
+                    label: page.name,
+                    url: `/services/${page.slug}`,
+                    icon: null,
+                    order_position: idx,
+                    is_active: true,
+                    open_in_new_tab: false,
+                    parent_id: `service-${parentService.id}`,
+                  });
+                }
+              });
+            }
+          } catch (pageError) {
+            console.error('Error loading pages:', pageError);
+          }
+        }
+
+        // Merge items with service children and page children
+        if (servicesItemId && serviceItems.length > 0) {
           const filteredItems = items.filter(i => !i.parent_id);
-          setMenuItems([...filteredItems, ...serviceItems]);
+          setMenuItems([...filteredItems, ...serviceItems, ...pageItems]);
         } else {
           setMenuItems(items);
         }
@@ -134,20 +171,46 @@ const Navbar = () => {
             {item.label.replace(/^[^ ]+ /, '')} <FaChevronDown className="dropdown-icon" />
           </button>
           <ul className="dropdown-menu">
-            {children.sort((a, b) => a.order_position - b.order_position).map(child => (
-              <li key={child.id}>
-                <NavLink
-                  to={child.url}
-                  onClick={closeMenu}
-                  target={child.open_in_new_tab ? '_blank' : '_self'}
-                  rel={child.open_in_new_tab ? 'noreferrer' : ''}
-                  className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                  {renderIcon(child)}
-                  {child.label}
-                </NavLink>
-              </li>
-            ))}
+            {/* Render services and pages in flat structure */}
+            {children.sort((a, b) => a.order_position - b.order_position).map(child => {
+              const childHasSubItems = childItemsMap[child.id] && childItemsMap[child.id].length > 0;
+              const childIsOpen = openDropdowns[child.id];
+              const subItems = childItemsMap[child.id] || [];
+
+              return (
+                <React.Fragment key={child.id}>
+                  {/* Service item with arrow on right */}
+                  <li className="service-item">
+                    <button
+                      type="button"
+                      className="service-toggle"
+                      onClick={() => toggleDropdown(child.id)}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                        {renderIcon(child)}
+                        {child.label}
+                      </span>
+                      <FaChevronDown style={{ transform: childIsOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s', fontSize: '12px' }} />
+                    </button>
+                  </li>
+                  {/* Sub-items (pages) - show/hide based on expanded state */}
+                  {childIsOpen && subItems.map(subItem => (
+                    <li key={subItem.id}>
+                      <NavLink
+                        to={subItem.url}
+                        onClick={closeMenu}
+                        target={subItem.open_in_new_tab ? '_blank' : '_self'}
+                        rel={subItem.open_in_new_tab ? 'noreferrer' : ''}
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        {renderIcon(subItem)}
+                        {subItem.label}
+                      </NavLink>
+                    </li>
+                  ))}
+                </React.Fragment>
+              );
+            })}
           </ul>
         </li>
       );

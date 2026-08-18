@@ -105,6 +105,32 @@
   color: #252381;
 }
 
+.service-item {
+  width: 100%;
+}
+
+.service-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  color: #252381 !important;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: "Manrope", sans-serif;
+}
+
+.service-toggle:hover {
+  background: rgba(37, 35, 129, 0.06);
+}
+
 .dropdown-menu {
   position: absolute;
   top: 48px;
@@ -112,11 +138,11 @@
   transform: translateX(-50%) translateY(14px);
   width: 320px;
   background: #ffffff;
-  border-radius: 18px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 8px 0;
   list-style: none;
-  box-shadow: 0 20px 45px rgba(37, 35, 129, 0.18);
-  border: 1px solid rgba(37, 35, 129, 0.1);
+  box-shadow: 0 10px 30px rgba(37, 35, 129, 0.15);
+  border: 1px solid rgba(37, 35, 129, 0.08);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -134,14 +160,14 @@
 .dropdown-menu::before {
   content: "";
   position: absolute;
-  top: -8px;
+  top: -7px;
   left: 50%;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   background: #ffffff;
   transform: translateX(-50%) rotate(45deg);
-  border-left: 1px solid rgba(37, 35, 129, 0.1);
-  border-top: 1px solid rgba(37, 35, 129, 0.1);
+  border-left: 1px solid rgba(37, 35, 129, 0.08);
+  border-top: 1px solid rgba(37, 35, 129, 0.08);
 }
 
 .dropdown-menu li {
@@ -152,17 +178,16 @@
   width: 100%;
   display: block;
   color: #252381 !important;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   text-decoration: none;
-  padding: 13px 16px;
-  border-radius: 12px;
+  padding: 10px 32px;
+  border-radius: 0;
   transition: all 0.3s ease;
 }
 
 .dropdown-menu li a:hover {
-  background: rgba(37, 35, 129, 0.08);
-  padding-left: 22px;
+  background: rgba(37, 35, 129, 0.05);
 }
 
 .navbar-icons {

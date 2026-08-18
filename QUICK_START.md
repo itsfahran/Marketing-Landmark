@@ -1,53 +1,49 @@
-# Complete Service System - Quick Start
+# BlogEditor & AdminPages - Supabase Integration Quick Start
 
-## 📋 What's Ready
+## ✅ What's Ready
 
-### Admin Panels Built
-- ✅ LOCAL template editor (5 tabs)
-- ✅ GEO template editor (6 tabs)  
-- ✅ SEO template editor (4 tabs)
-- ✅ All CRUD operations (Add/Edit/Delete)
+### Database
+- ✅ 11 tables created with indexes
+- ✅ Sample data inserted (5 categories, 3 authors)
+- ✅ Timestamps and triggers configured
 
-### Database Tables Created
-- ✅ 12 tables total
-- ✅ All relationships set up
-- ✅ RLS policies configured
+### React Hooks
+- ✅ `useBlogEditor.js` - Complete blog CRUD with SEO
+- ✅ `usePageEditor.js` - Complete page CRUD with SEO analysis
+- ✅ Real-time SEO score calculation
+- ✅ FAQ management (add/edit/delete)
+- ✅ Keyword management
 
-### Frontend Wired
-- ✅ DynamicServicePage fetches data
-- ✅ Components accept props
-- ✅ Fallback to hardcoded data if empty
+### API Routes
+- ✅ `src/api/routes.js` - Blog, Page, and Utility APIs
+- ✅ Search, filtering, pagination
+- ✅ View count tracking
+- ✅ Dashboard stats
 
 ---
 
-## 🚀 Get Started in 3 Steps
+## 🚀 Setup in 3 Steps
 
-### Step 1: Database Setup (2 minutes)
+### Step 1: Environment Setup (2 minutes)
+
+Create `.env.local` in project root:
+```env
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+Get from Supabase Dashboard → Settings → API
+
+### Step 2: Install Dependencies (1 minute)
+```bash
+npm install @supabase/supabase-js
+```
+
+### Step 3: Database Setup (2 minutes)
 1. Go to Supabase → SQL Editor
-2. Copy entire content from: `COMPLETE_SERVICES_SCHEMA.sql`
+2. Copy entire content from: `SETUP_DATABASE_CORRECT.sql`
 3. Paste and run
 4. Done! ✅
-
-### Step 2: Test Admin Panel (5 minutes)
-1. Go to http://localhost:3000/admin/services
-2. Click "+ Add" button
-3. Create new service:
-   - Name: "Test GEO Service"
-   - Slug: "test-geo"
-   - Template: **GEO**
-   - Description: "Testing GEO template"
-   - Status: "published"
-4. Click Create
-5. Click → arrow next to service
-6. See 6 tabs: GEO Hero, Benefits, Platforms, Pricing, Scope, FAQs
-
-### Step 3: Add Sample Data (3 minutes)
-In admin editor:
-- **GEO Hero tab**: Fill heading, subheading, 3 features
-- **Benefits tab**: Add "Structured content for AI engines"
-- **Platforms tab**: Add "ChatGPT", "Meta AI"
-- **Pricing tab**: Add "Basic" package - 59,999 PKR
-- **Scope tab**: Add "Technical Audit" scope card
 - **FAQs tab**: Add "How long..." question
 
 ### Step 4: View Live (1 minute)

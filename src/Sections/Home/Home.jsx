@@ -24,15 +24,37 @@ const Home = () => {
       const data = await fetchHero()
       if (data) {
         setHeroData({
-          heading: data.heading,
-          subheading: data.description,
-          description: data.description,
-          marqueeText: data.heading,
-          primaryBtn: { text: data.cta_text || 'Get Started', link: data.cta_link || '/contact' },
+          heading: data.heading || 'Professional SEO Expert In Pakistan',
+          subheading: data.subheading || 'Farhan Ali is an Experienced and Certified Professional SEO Expert in Pakistan with specialized Expertise in GEO / AEO / AI Search Engine Optimization and Local SEO.',
+          description: data.description || 'Over the Past 5 Years, I\'ve Completed 150+ Projects, Collaborating with Top Global IT & Digital Marketing Companies and International Clients, Consistently Delivering Proven Results in Online Visibility, Organic Traffic, and Online Business Growth.',
+          marqueeText: data.marquee_text || 'Professional SEO Expert In Pakistan * Farhan Ali * Professional SEO Expert In Pakistan',
+          videoLink: data.video_link || '',
+          showStats: data.show_stats !== false,
+          stats: data.stats || [],
+          showContactForm: data.show_contact_form !== false,
+          primaryBtn: {
+            text: data.cta_primary_text || 'Get Started',
+            link: data.cta_primary_link || '/contact'
+          },
+          secondaryBtn: {
+            text: data.cta_secondary_text || 'Learn More',
+            link: data.cta_secondary_link || '#'
+          }
         })
       }
     } catch (error) {
       console.error('Error loading hero:', error)
+      // Set default data if fetch fails
+      setHeroData({
+        heading: 'Professional SEO Expert In Pakistan',
+        subheading: 'Farhan Ali is an Experienced and Certified Professional SEO Expert in Pakistan with specialized Expertise in GEO / AEO / AI Search Engine Optimization and Local SEO.',
+        description: 'Over the Past 5 Years, I\'ve Completed 150+ Projects, Collaborating with Top Global IT & Digital Marketing Companies and International Clients, Consistently Delivering Proven Results in Online Visibility, Organic Traffic, and Online Business Growth.',
+        marqueeText: 'Professional SEO Expert In Pakistan * Farhan Ali * Professional SEO Expert In Pakistan',
+        primaryBtn: { text: 'Get Started', link: '/contact' },
+        secondaryBtn: { text: 'Learn More', link: '#' },
+        showStats: true,
+        showContactForm: true
+      })
     }
   }
 

@@ -1,0 +1,205 @@
+.keyword-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.keyword-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.keyword-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.keyword-count {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #667eea;
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.keyword-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.keyword-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.keyword-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.keyword-add-btn {
+  padding: 10px 16px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.keyword-add-btn:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.keyword-add-btn:active {
+  transform: translateY(0);
+}
+
+.keywords-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyword-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border-left: 3px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.keyword-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left-color: #667eea;
+}
+
+.keyword-item.primary {
+  border-left-color: #FFD700;
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.keyword-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.keyword-primary-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.keyword-item.primary .keyword-primary-btn {
+  color: #FFD700;
+}
+
+.keyword-primary-btn:hover {
+  color: #FFD700;
+  transform: scale(1.1);
+}
+
+.keyword-text {
+  flex: 1;
+}
+
+.keyword-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.keyword-density {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #999;
+}
+
+.keyword-delete-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.keyword-delete-btn:hover {
+  color: #f44336;
+  transform: scale(1.1);
+}
+
+.keywords-empty {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
+
+.keywords-empty p {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.keywords-empty small {
+  font-size: 12px;
+  color: #bbb;
+}
+
+.keyword-tips {
+  padding: 10px 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-left: 3px solid #667eea;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #667eea;
+  line-height: 1.5;
+}
+
+.keyword-tips strong {
+  display: block;
+  margin-bottom: 4px;
+}
